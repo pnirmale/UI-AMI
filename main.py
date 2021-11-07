@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
 import os
+import json
 app = Flask(__name__)
 
 
@@ -79,12 +80,92 @@ def aws_post():
 	#os.system(destory)
 	return render_template("aws.html", title="Aws")
 
-@app.route("/azure", methods=['GET','POST'])
+@app.route("/azure",methods=['GET'])
 def azure():
-    return render_template("index.html", title="Azure")
+	try:
+		data = json.loads(open("input.json").read())
+	except:
+		print("Please provide input.json")
+		exit(0)
+	lines=[]
+	for i in data['CentOS']:
+		print(i['urn'])
+		lines.append(i['urn'])
+	data2=[]
+	try:
+		data2 = json.loads(open("azure_credentials.json").read())
+	except:
+		print("Please provide azure_credentials.json")
+	credentials=[]
+	for i in data2['azure_credentials']:
+		print(i['client_id'])
+		credentials.append(i['client_id'])
+		
+	return render_template("azure.html", title="Azure",opt=lines,credential=credentials)
+@app.route("/azure", methods=['POST'])
+def azure_post():
+
+	pairs={}
+	
+
+	prefix=request.form['vmname']
+	pairs['prefix']=prefix
+	user=request.form['user']
+	pairs['user']=user
+	password=request.form['Password']
+	#pairs['password']=password
+	region=request.form['region']
+	pairs['location']=region
+	os1=request.form['os']
+	#pairs['os']=os
+	ami=request.form['ami']
+	cred=request.form['cred']
+	#pairs['ami']=ami
+	sku=""
+	publisher=""
+	version=""
+	try:
+		data = json.loads(open("input.json").read())
+	except:
+		print("Please provide input.json")
+		exit(0)
+	for i in data['CentOS']:
+		if i['urn']==ami:
+			pairs['offer']=i['offer']
+			pairs['sku']=i['sku']
+			pairs['publisher']=i['publisher']
+			pairs['image_version']=i['version']
+	data2=[]
+	try:
+		data2 = json.loads(open("azure_credentials.json").read())
+	except:
+		print("Please provide azure_credentials.json")
+	credentials=[]
+	for i in data2['azure_credentials']:
+		if cred==i['client_id']:
+			pairs['subscription_id']=i['subscription_id']
+			pairs['tenant_id']=i['tenant_id']
+			pairs['client_id']=cred
+			
+			
+			pairs['client_secret']=i['client_secret']
+		
+    	
+	cmd=generateApplyCommand(pairs)
+	print(cmd)
+	
+	os.chdir("azure")
+	
+	os.system("terraform init")
+	os.system (cmd)
+	#os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
+	#destory =generateApplyCommand(pairs,"destory")
+	#os.system(destory)
+	return render_template("azure.html", title="Azure")
+
 @app.route("/gcp")
 def gcp():
-    return render_template("index.html",title="GCP")    
+    return render_template("gcp.html",title="GCP")    
 
 
 @app.route('/getfile', methods=['GET','POST'])
