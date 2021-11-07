@@ -32,7 +32,7 @@
                 </div>
             </nav>
             <div class="jumbotron">
-                <form action="/azure" method="POST" enctype="multipart/form-data">
+                <form action="/gcp" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="vmname">Virtual Machine Name</label>
                         <input  type="text" class="form-control" id="vmname" name="vmname" placeholder="Enter Virtual Machine Name">
@@ -59,15 +59,9 @@
                         
                     </div>
                     <div class="form-group">
-                        <select class="custom-select mr-sm-2" id="cred" name="cred">
-                            <option SELECTED value='0'>Choose available ami</option>
-                            {% for x in credential %}
-                                <option value= '{{ x }}'>{{x}}</option>
-                            {% endfor %}
-                        </select>
-                        
+                        <label for="file">Choose aws Creadiantial file</label>
+                        <input type="file" class="form-control-file" id="file" name="file">
                     </div>
-                    
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>

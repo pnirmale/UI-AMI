@@ -165,7 +165,29 @@ def azure_post():
 
 @app.route("/gcp")
 def gcp():
-    return render_template("gcp.html",title="GCP")    
+    filename = 'images.txt'
+    lines = []
+    with open(filename) as f:
+    	lines = f.readlines()
+    return render_template("gcp.html", title="GCP",opt=lines)      
+
+@app.route("/gcp",methods=["POST"])
+def gcp_post():
+	pairs={}
+	boot_image=request.form['ami']
+	file=request.files['file']
+
+	filename=secure_filename(file.filename)
+	cwd = os.getcwd()
+	print(cwd)
+	cwd+="/gcp"
+	file.save(os.path.join(cwd, secure_filename(file.filename)))
+	cmd=generateApplyCommand(pairs)
+	os.chdir("gcp")
+	os.system('terraform init')
+	os.system(cmd)
+	os.chdir("..")
+	return render_template("gcp.html",title="gcp")
 
 
 @app.route('/getfile', methods=['GET','POST'])
@@ -173,7 +195,7 @@ def getfile():
     if request.method == 'POST':
 
         # for secure filenames. Read the documentation.
-        file = request.files['myfile']
+        file = request.files['file']
         filename = secure_filename(file.filename) 
 
         # os.path.join is used so that paths work in every operating system
