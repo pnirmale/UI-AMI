@@ -186,27 +186,76 @@ def azure_post():
 
 @app.route("/gcp")
 def gcp():
-    filename = 'images.txt'
-    lines = []
-    with open(filename) as f:
-    	lines = f.readlines()
-    return render_template("gcp.html", title="GCP",opt=lines)      
+	with open("data/gcp_images.txt") as f:
+		lines=[]
+		for line in f.readlines():
+			lines.append(line[:-1])
+	return render_template("gcp.html",title="gcp",opt=lines)
 
 @app.route("/gcp",methods=["POST"])
 def gcp_post():
-	pairs={}
-	boot_image=request.form['ami']
-	file=request.files['file']
+	directory = "gcp"
+	filename = None
 
-	filename=secure_filename(file.filename)
-	cwd = os.getcwd()
-	print(cwd)
-	cwd+="/gcp"
-	file.save(os.path.join(cwd, secure_filename(file.filename)))
+	boot_image = request.form['ami']
+	project = request.form['project']
+
+	if re.search('windows',boot_image):
+		directory = "gcp-win"
+
+	pairs={}
+	pairs["boot_image"] = boot_image
+
+	if len(request.form.getlist("AlreadyConfigured")) == 0:
+		file=request.files['file']
+		filename = secure_filename(file.filename)
+		file.save(os.path.join(os.getcwd() ,directory,filename))
+		content = '''
+			provider "google" {{
+				project     = "{project}"
+				credentials = "{filename}"
+				region      = "asia-south1"
+				zone        = "asia-south1-a"
+			}}
+
+			provider "google-beta" {{
+				project     = "{project}"
+				credentials = "{filename}"
+				region      = "asia-south1"
+				zone        = "asia-south1-a"
+			}}
+		'''
+		print(content.format(project=project,filename=filename))
+		os.chdir(directory)
+		provider_file = open("providers.tf", "w")
+		provider_file.write(content.format(project=project,filename=filename))
+		provider_file.close()
+		os.chdir("..")
+	else:
+		content = '''
+			provider "google" {}
+
+			provider "google-beta" {}
+		'''
+		os.chdir(directory)
+		provider_file = open("providers.tf", "w")
+		provider_file.write(content)
+		provider_file.close()
+		os.chdir("..")
+	
 	cmd=generateApplyCommand(pairs)
-	os.chdir("gcp")
-	os.system('terraform init')
+	print(cmd)
+	os.chdir(directory)
+	os.system('terraform init -upgrade')
 	os.system(cmd)
+	os.system("terraform state rm \"google_compute_machine_image.image\" ")
+	cmd += " -destroy" # destroys infrastructure
+	print(cmd)
+	os.system(cmd)
+
+	if len(request.form.getlist("AlreadyConfigured")) == 0:
+		os.remove(filename)
+		
 	os.chdir("..")
 	return render_template("gcp.html",title="gcp")
 
