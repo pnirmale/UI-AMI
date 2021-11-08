@@ -1,2 +1,1 @@
-access_key=AKIAZOLLOARNCPA2WY4F
-secret_key=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
+
