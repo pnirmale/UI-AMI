@@ -33,7 +33,7 @@
             </nav>
             <div class="jumbotron">
                 <form action="/aws" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="vmname">Virtual Machine Name</label>
                         <input  type="text" class="form-control" id="vmname" name="vmname" placeholder="Enter Virtual Machine Name">
                     </div>
@@ -56,7 +56,7 @@
                     <div class="form-group">
                         <label for="vcidr">vpc cidr block </label>
                         <input  type="text" class="form-control" id="vcidr" name="vcidr" placeholder="10.0.10.0/24">
-                    </div>
+                    </div> 
                     <div class="form-group">
                         <label for="os">Choose Operating System</label>
                         <select class="custom-select mr-sm-2" id="os" name="os">
@@ -66,15 +66,20 @@
                             <option value="3">Centos</option>
                             <option value="4">Suse</option>
                         </select>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <select class="custom-select mr-sm-2" id="ami" name="ami">
                             <option SELECTED value='0'>Choose available ami</option>
                             {% for x in opt %}
-                                <option value= '{{ x }}'>{{x}}</option>
+                                <option value= '{{ x }}'>{{x.os_name}}</option>
                             {% endfor %}
                         </select>
-                        
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Check if you have configured already (No need to select configuration file if you have configured locally)
+                        </label>
                     </div>
                     <div class="form-group">
                         <label for="file">Choose aws Creadiantial file</label>
