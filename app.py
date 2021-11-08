@@ -71,7 +71,6 @@ def aws_post():
 				region = "{region}"
 			}}
 		'''
-		print(content.format(access_key=access_key,secret_key=secret_key,region=region))
 		os.chdir(directory)
 		provider_file = open("providers.tf", "w")
 		provider_file.write(content.format(access_key=access_key,secret_key=secret_key,region=region))
@@ -80,12 +79,13 @@ def aws_post():
 		os.remove(filename)
 	else:
 		content = '''
-			provider "aws" {}
+			provider "aws" {{
+				region = "{region}"
+			}}
 		'''
-		print(content)
 		os.chdir(directory)
 		provider_file = open("providers.tf", "w")
-		provider_file.write(content)
+		provider_file.write(content.format(region=region))
 		provider_file.close()
 		os.chdir("..")
 		
@@ -96,7 +96,9 @@ def aws_post():
 	os.system("terraform init -upgrade")
 	os.system (cmd)
 	os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
-	os.system(generateApplyCommand(pairs,"destory"))
+	cmd += " -destroy" # destroys infrastructure
+	print(cmd)
+	os.system(cmd)
 	return render_template("aws.html", title="Aws")
 
 @app.route("/azure",methods=['GET'])
