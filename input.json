@@ -105,7 +105,163 @@
     "urn": "OpenLogic:CentOS:8_4:8.4.2021071900",
     "version": "8.4.2021071900"
   }
+],
+ "SUSE":[
+    {
+        "offer": "SLES-SAP-BYOS",
+        "publisher": "SUSE",
+        "sku": "12-SP3",
+        "urn": "SUSE:SLES-SAP-BYOS:12-SP3:2021.03.05",
+        "version": "2021.03.05"
+      },
+      {
+        "offer": "SLES-SAP-BYOS",
+        "publisher": "SUSE",
+        "sku": "12-sp4",
+        "urn": "SUSE:SLES-SAP-BYOS:12-sp4:2021.03.05",
+        "version": "2021.03.05"
+      },
+      {
+        "offer": "SLES-SAP-BYOS",
+        "publisher": "SUSE",
+        "sku": "12-sp4-gen2",
+        "urn": "SUSE:SLES-SAP-BYOS:12-sp4-gen2:2021.02.18",
+        "version": "2021.02.18"
+      },
+      {
+        "offer": "SLES-SAP-BYOS",
+        "publisher": "SUSE",
+        "sku": "15",
+        "urn": "SUSE:SLES-SAP-BYOS:15:2021.03.05",
+        "version": "2021.03.05"
+      },
+      {
+        "offer": "SLES-SAP-BYOS",
+        "publisher": "SUSE",
+        "sku": "15-gen2",
+        "urn": "SUSE:SLES-SAP-BYOS:15-gen2:2021.03.05",
+        "version": "2021.03.05"
+      },
+      {
+        "offer": "SLES-SAP-BYOS",
+        "publisher": "SUSE",
+        "sku": "gen2-12-sp4",
+        "urn": "SUSE:SLES-SAP-BYOS:gen2-12-sp4:2020.12.14",
+        "version": "2020.12.14"
+      },
+      {
+        "offer": "SLES-SAP-BYOS",
+        "publisher": "SUSE",
+        "sku": "gen2-15",
+        "urn": "SUSE:SLES-SAP-BYOS:gen2-15:2021.01.12",
+        "version": "2021.01.12"
+      }
+],"RHEL":[
+    {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "6.10",
+    "urn": "RedHat:RHEL:6.10:6.10.2019061919",
+    "version": "6.10.2019061919"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.2",
+    "urn": "RedHat:RHEL:7.2:7.2.2017090717",
+    "version": "7.2.2017090717"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.3",
+    "urn": "RedHat:RHEL:7.3:7.3.2017090800",
+    "version": "7.3.2017090800"
+  },
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.4",
+    "urn": "RedHat:RHEL:7.4:7.4.2021051701",
+    "version": "7.4.2021051701"
+  },
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.5",
+    "urn": "RedHat:RHEL:7.5:7.5.2021072201",
+    "version": "7.5.2021072201"
+  },
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.6",
+    "urn": "RedHat:RHEL:7.6:7.6.2021051101",
+    "version": "7.6.2021051101"
+  },
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.7",
+    "urn": "RedHat:RHEL:7.7:7.7.2021052001",
+    "version": "7.7.2021052001"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.8",
+    "urn": "RedHat:RHEL:7.8:7.8.2021051701",
+    "version": "7.8.2021051701"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7_9",
+    "urn": "RedHat:RHEL:7_9:7.9.202110089",
+    "version": "7.9.202110089"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8",
+    "urn": "RedHat:RHEL:8:8.0.20191023",
+    "version": "8.0.20191023"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8.1",
+    "urn": "RedHat:RHEL:8.1:8.1.2021091101",
+    "version": "8.1.2021091101"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8.2",
+    "urn": "RedHat:RHEL:8.2:8.2.2021091101",
+    "version": "8.2.2021091101"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8_3",
+    "urn": "RedHat:RHEL:8_3:8.3.2021091101",
+    "version": "8.3.2021091101"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8_4",
+    "urn": "RedHat:RHEL:8_4:8.4.2021091101",
+    "version": "8.4.2021091101"
+  }
+
 ]
+
 }  
 
 

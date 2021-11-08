@@ -65,6 +65,7 @@ def aws_post():
 	#os=request.form['os']
 	#pairs['os']=os
 	ami=request.form['ami']
+
 	#pairs['ami']=ami
 	
 	
@@ -88,9 +89,10 @@ def azure():
 		print("Please provide input.json")
 		exit(0)
 	lines=[]
-	for i in data['CentOS']:
-		print(i['urn'])
-		lines.append(i['urn'])
+	for key in data:
+		for i in data[key]:
+			print(i['urn'])
+			lines.append(i['urn'])
 	data2=[]
 	try:
 		data2 = json.loads(open("azure_credentials.json").read())
@@ -110,17 +112,11 @@ def azure_post():
 
 	prefix=request.form['vmname']
 	pairs['prefix']=prefix
-	user=request.form['user']
-	pairs['user']=user
-	password=request.form['Password']
-	#pairs['password']=password
-	region=request.form['region']
-	pairs['location']=region
-	os1=request.form['os']
-	#pairs['os']=os
+	
+	
 	ami=request.form['ami']
 	cred=request.form['cred']
-	#pairs['ami']=ami
+	
 	sku=""
 	publisher=""
 	version=""
@@ -129,7 +125,13 @@ def azure_post():
 	except:
 		print("Please provide input.json")
 		exit(0)
-	for i in data['CentOS']:
+	needos=""	
+	for key in data:
+	    if ami.find(key)!=-1:
+	       needos=key
+	       break
+	print(needos)
+	for i in data[needos]:
 		if i['urn']==ami:
 			pairs['offer']=i['offer']
 			pairs['sku']=i['sku']
@@ -174,18 +176,31 @@ def gcp():
 @app.route("/gcp",methods=["POST"])
 def gcp_post():
 	pairs={}
+	prefix=request.form['vmname']
+	pairs['prefix']=prefix
 	boot_image=request.form['ami']
 	file=request.files['file']
-
+	word=boot_image.split( )
+	boot_image=word[0]+"/"+word[1]
+	print(boot_image)
+	pairs['boot_image']=boot_image
 	filename=secure_filename(file.filename)
 	cwd = os.getcwd()
 	print(cwd)
-	cwd+="/gcp"
+	if(boot_image.find('Windows')!=-1 or boot_image.find('windows')!=-1 or boot_image.find('WINDOWS')!=-1):
+		cwd+="/gcp-win"
+	else:
+	    cwd+='/gcp'	
 	file.save(os.path.join(cwd, secure_filename(file.filename)))
+	pairs['service_account_credentials_file_location']=filename
 	cmd=generateApplyCommand(pairs)
-	os.chdir("gcp")
-	os.system('terraform init')
-	os.system(cmd)
+	print(cmd)
+	if(boot_image.find('Windows')!=-1 or boot_image.find('windows')!=-1 or boot_image.find('WINDOWS')!=-1):
+		os.chdir("gcp-win")
+	else:
+		os.chdir("gcp")
+	#os.system('terraform init')
+	#os.system(cmd)
 	os.chdir("..")
 	return render_template("gcp.html",title="gcp")
 
