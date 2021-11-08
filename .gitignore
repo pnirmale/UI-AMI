@@ -1,4 +1,5 @@
 __py*
 */.terraform*
 */terraform*
+*/providers.tf
 .env
