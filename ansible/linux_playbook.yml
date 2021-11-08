@@ -1,0 +1,35 @@
+- name: Terraform and Ansible Integration
+  hosts: all
+  
+  tasks:
+    - name: Print Operating System Family
+      debug: msg="Host OS - {{ansible_os_family}}"
+
+    - name: Install MongoDB On Ubuntu/Debian
+      become: yes
+      apt:
+        name: mongodb
+        state: present
+        update_cache: yes
+      when: ansible_os_family == 'ubuntu' or ansible_os_family == 'Debian' 
+
+    - name: Copy file with owner and permissions
+      copy:
+        src: mongo.txt
+        dest: /etc/yum.repos.d/mongodb-org-5.0.repo
+      become: yes
+      when: ansible_os_family == 'RedHat'
+        
+    - name: Install mongodb-org package
+      yum:
+        name: mongodb-org
+        state: present
+      become: yes
+      when: ansible_os_family == 'RedHat'
+
+    - name: Start the service
+      service:
+        name: mongod
+        state: started
+      become: yes
+      when: ansible_os_family == 'RedHat'

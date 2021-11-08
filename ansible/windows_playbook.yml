@@ -1,0 +1,23 @@
+- name: Terraform Ansible Integration
+  hosts: all
+  tasks:
+    - name: Install chocolatey
+      win_chocolatey:
+        name:
+          - chocolatey
+          - chocolatey-core.extension
+        state: present
+
+    - name: Install Python3
+      win_command: choco install -y python3
+
+    - name: Installing Notepad++
+      win_chocolatey:
+        name: notepadplusplus
+        version: '7.5.4'
+
+    - name: Install Google Chrome
+      win_chocolatey:
+        name: googlechrome
+        state: present
+        ignore_checksums: yes
