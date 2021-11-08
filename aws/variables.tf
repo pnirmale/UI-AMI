@@ -1,14 +1,3 @@
-variable "access_key" {
-    description = "Specify aws ACCESS_KEY"
-    
-   
-}
-
-variable "secret_key" {
-    description = "Specify aws SECRET_ACCESS_KEY"
-    
-}
-
 variable public_key_location {
     description = "Specify location for your public key generated via (ssh-keygen)"
     default = "~/.ssh/id_rsa.pub"
@@ -36,22 +25,22 @@ variable subnet_cidr_block {
 
 variable avail_zone {
     description = "Specify availability zone"
-    default = "ap-south-1a"
+    default = "us-east-2a"
 }
 
 variable "region" {
     description = " Specify region"
-    default = "ap-south-1"
+    default = "us-east-2"
 }
 
 variable "ami_id" {
     description = "Specify linux ami id"
-    default = "ami-0c1a7f89451184c8b"
+    default = "ami-074cce78125f09d61"
 }
 
 variable user {
     description = "Specify default user associated with given ami_id"
-    default = "ubuntu"
+    default = "ec2-user"
 }
 
 variable instance_type {
