@@ -33,12 +33,9 @@
             </nav>
             <div class="jumbotron">
                 <form action="/gcp" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="vmname">Virtual Machine Name</label>
-                        <input  type="text" class="form-control" id="vmname" name="vmname" placeholder="Enter Virtual Machine Name">
-                    </div>
+                   <!-- 
                     
-                    <div class="form-group">
+                     <div class="form-group">
                         <label for="os">Choose Operating System</label>
                         <select class="custom-select mr-sm-2" id="os" name="os">
                             <option selected>Choose Operating System</option>
@@ -47,19 +44,28 @@
                             <option value="3">Centos</option>
                             <option value="4">Suse</option>
                         </select>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="projectname">Project Id which has compute engine and billing enabled</label>
+                        <input required type="text" class="form-control" id="project" name="project" placeholder="Enter Project Name">
                     </div>
                     <div class="form-group">
-                        <label for="os">Select Required AMI</label>
+                        <label for="os">Select Base Image</label>
                         <select class="custom-select mr-sm-2" id="ami" name="ami">
-                            <option SELECTED value='0'>Choose available ami</option>
+                            <option SELECTED value='0'>Choose Base Image</option>
                             {% for x in opt %}
                                 <option value= '{{ x }}'>{{x}}</option>
                             {% endfor %}
                         </select>
-                        
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Check if you have configured already (No need to select configuration file if you have configured locally)
+                        </label>
                     </div>
                     <div class="form-group">
-                        <label for="file">Choose aws Creadiantial file</label>
+                        <label for="file">Choose gcp service Creadiantial file</label>
                         <input type="file" class="form-control-file" id="file" name="file">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
