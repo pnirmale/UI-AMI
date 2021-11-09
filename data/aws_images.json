@@ -195,5 +195,23 @@
         "ami_id" : "ami-009c145a2ff490186",
         "user" : "ec2-user",
         "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Ubuntu Server 20.04 LTS (HVM)",
+        "ami_id" : "ami-0629230e074c580f2",
+        "user" : "ubuntu",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Ubuntu Server 18.04 LTS (HVM)",
+        "ami_id" : "ami-020db2c14939a8efb ",
+        "user" : "ubuntu",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Ubuntu Server 16.04 LTS (HVM)",
+        "ami_id" : "ami-05803413c51f242b7",
+        "user" : "ubuntu",
+        "region" : "us-east-2"
     }
 ]
