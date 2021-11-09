@@ -54,8 +54,11 @@
                                 <label for="vmname">Virtual Machine Name</label>
                                 <input  type="text" class="form-control" id="vmname" name="vmname" placeholder="Enter Virtual Machine Name">
                             </div>
+                            <div class="form-group">
+                                <label for="projectname">Project Id which has compute engine and billing enabled</label>
+                                <input required type="text" class="form-control" id="project" name="project" placeholder="Enter Project Name">
+                            </div>
                             
-                        
                             <div class="form-group">
                                 <label for="os">Select Required AMI  </label>
                                 <select class="selectpicker" data-live-search="true" id="ami" name="ami">
@@ -65,6 +68,12 @@
                                         <option data-tokens='{{ x }}'>{{x}}</option>
                                     {% endfor %}
                                 </select>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Check if you have configured already (No need to select configuration file if you have configured locally)
+                                </label>
                             </div>
                             <div class="form-group">
                                 <label for="file">Choose Google Cloud Creadiantial file</label>

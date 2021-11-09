@@ -1,0 +1,13 @@
+[
+    {
+        "os_name" : "ubuntu-16",
+        "ami_id" : "ami-074cce78125f09d61",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "windows-11",
+        "ami_id" : "random_string_windows",
+        "region" : "us-east-2"
+    }
+]
