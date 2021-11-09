@@ -4,81 +4,98 @@ import os
 import json
 app = Flask(__name__)
 
-
-@app.route("/", methods=['GET','POST'])
-def view_home():
-    return render_template("index.html", title="Home Page")
-
-@app.route("/aws")
-def aws():
-	
- 	
- 		filename = 'images.txt'
- 		lines = []
- 		with open(filename) as f:
- 			lines = f.readlines()
- 		return render_template("aws.html", title="Aws",opt=lines)   
-
-
-
+#function to generate the terraform apply command with parameters
 def generateApplyCommand(pairs,st="apply"):
     str = "terraform " + st +" --auto-approve"
     for key,value in pairs.items():
     	str += " -var "+key+"=\""+value+"\""	
     return str;
 
+
+#home page route 
+@app.route("/", methods=['GET','POST'])
+def view_home():
+    return render_template("index.html", title="Home Page")
+
+@app.route("/aws")
+def aws():
+	#DropDown in web page contains the name of ami that user can choose 
+	ami_list_filename = 'images.txt'  #loading the name of file
+	ami_names = []                    #list of name of ami names
+	with open(ami_list_filename) as file:
+		ami_names=file.readlines()                       #reading txt file line by line
+	return render_template("aws.html", title="Aws",opt=ami_names)   
+
+
+
+
+
 @app.route("/aws", methods=['POST'])
 def aws_post():
 
-	pairs={}
+	terraform_command_variables_and_value={}
+	
+	#Receving file input form the user for the credentials
 	file = request.files['file']
 	filename = secure_filename(file.filename) 
 	file.save(filename)
-	lines =[]
+	lines_in_file =[]
 	with open(filename) as f:
-		lines = f.readlines()
-	count = 0
-	length=len(lines)
-	for line in lines:
-		if count!=length-1:
-			tmp=line[:-1]
-			result = tmp.find('=')
-			pairs[tmp[0:result]]=tmp[result+1:]
+		lines_in_file = f.readlines()
+
+	line_number_in_txt_file = 0
+	num_of_line_in_txt_file=len(lines_in_file)
+	for line in lines_in_file:
+		if line_number_in_txt_file!=num_of_line_in_txt_file-1:
+			contents_of_line_after_removing_newline_character=line[:-1]
+			result = contents_of_line_after_removing_newline_character.find('=')
+			terraform_command_variables_and_value[contents_of_line_after_removing_newline_character[0:result]]=contents_of_line_after_removing_newline_character[result+1:]
 
 		else:	
 		    result = line.find('=')
-		    pairs[line[0:result]]=line[result+1:]
-		#print(line[-1])
-		#print(line[result+1:])
+		    contents_of_line_after_removing_newline_character[line[0:result]]=line[result+1:]
+		
 	prefix=request.form['vmname']
-	pairs['prefix']=prefix
+	terraform_command_variables_and_value['prefix']=prefix
+	
 	user=request.form['user']
-	pairs['user']=user
+	terraform_command_variables_and_value['user']=user
+	
 	password=request.form['Password']
 	#pairs['password']=password
+	
 	region=request.form['region']
-	pairs['region']=region
+	terraform_command_variables_and_value['region']=region
+	
 	subnet_cidr_block=request.form['scidr']
-	pairs['subnet_cidr_block']=subnet_cidr_block
+	terraform_command_variables_and_value['subnet_cidr_block']=subnet_cidr_block
+	
 	vpc_cidr_block=request.form['vcidr']
-	pairs['vpc_cidr_block']=vpc_cidr_block
+	terraform_command_variables_and_value['vpc_cidr_block']=vpc_cidr_block
 	#os=request.form['os']
 	#pairs['os']=os
 	ami=request.form['ami']
 
 	#pairs['ami']=ami
 	
-	
-	cmd=generateApplyCommand(pairs)
+	#Generate the command to execute in terraform directory
+	cmd=generateApplyCommand(terraform_command_variables_and_value)
 	print(cmd)
 	
+	#change the directory to respective folder of the aws terraform
 	os.chdir("aws")
 	
+	#initial command of terraform to get .terraform directory and providers
 	os.system("terraform init")
+	#run the command 
 	os.system (cmd)
-	#os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
-	#destory =generateApplyCommand(pairs,"destory")
-	#os.system(destory)
+
+	#remove the other resources except the ami creation from state file
+	os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
+
+	#gene
+	destory =generateApplyCommand(pairs,"destory")
+	os.system(destory)
 	return render_template("aws.html", title="Aws")
 
 @app.route("/azure",methods=['GET'])
@@ -107,11 +124,11 @@ def azure():
 @app.route("/azure", methods=['POST'])
 def azure_post():
 
-	pairs={}
+	terraform_command_variables_and_value={}
 	
-
+    
 	prefix=request.form['vmname']
-	pairs['prefix']=prefix
+	terraform_command_variables_and_value['prefix']=prefix
 	
 	
 	ami=request.form['ami']
@@ -120,23 +137,26 @@ def azure_post():
 	sku=""
 	publisher=""
 	version=""
+	#loading the ami name and publisher file for finding out sku publisher offer for azure image
 	try:
 		data = json.loads(open("input.json").read())
 	except:
 		print("Please provide input.json")
 		exit(0)
-	needos=""	
+	#finding out which operating systenm is selected by the user comparing through the key in json file
+	operating_system_selected_by_user=""	
 	for key in data:
 	    if ami.find(key)!=-1:
-	       needos=key
+	       operating_system_selected_by_user=key
 	       break
-	print(needos)
-	for i in data[needos]:
+	print(operating_system_selected_by_user)
+
+	for i in data[operating_system_selected_by_user]:
 		if i['urn']==ami:
-			pairs['offer']=i['offer']
-			pairs['sku']=i['sku']
-			pairs['publisher']=i['publisher']
-			pairs['image_version']=i['version']
+			terraform_command_variables_and_value['offer']=i['offer']
+			terraform_command_variables_and_value['sku']=i['sku']
+			terraform_command_variables_and_value['publisher']=i['publisher']
+			terraform_command_variables_and_value['image_version']=i['version']
 	data2=[]
 	try:
 		data2 = json.loads(open("azure_credentials.json").read())
@@ -145,88 +165,86 @@ def azure_post():
 	credentials=[]
 	for i in data2['azure_credentials']:
 		if cred==i['client_id']:
-			pairs['subscription_id']=i['subscription_id']
-			pairs['tenant_id']=i['tenant_id']
-			pairs['client_id']=cred
+			terraform_command_variables_and_value['subscription_id']=i['subscription_id']
+			terraform_command_variables_and_value['tenant_id']=i['tenant_id']
+			terraform_command_variables_and_value['client_id']=cred
 			
 			
-			pairs['client_secret']=i['client_secret']
+			terraform_command_variables_and_value['client_secret']=i['client_secret']
 		
     	
-	cmd=generateApplyCommand(pairs)
+	cmd=generateApplyCommand(terraform_command_variables_and_value)
 	print(cmd)
 	
 	os.chdir("azure")
-	
 	os.system("terraform init")
 	os.system (cmd)
 	#os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
-	#destory =generateApplyCommand(pairs,"destory")
-	#os.system(destory)
+	destory =generateApplyCommand(pairs,"destory")
+	os.system(destory)
 	return render_template("azure.html", title="Azure")
 
 @app.route("/gcp")
 def gcp():
-    filename = 'images.txt'
-    lines = []
-    with open(filename) as f:
-    	lines = f.readlines()
-    return render_template("gcp.html", title="GCP",opt=lines)      
+
+	#DropDown in web page contains the name of ami that user can choose 
+	ami_list_filename = 'images.txt'  #loading the name of file
+	ami_names = []                    #list of name of ami names
+	with open(ami_list_filename) as file:
+		ami_names=file.readlines()                       #reading txt file line by line
+	return render_template("gcp.html", title="Aws",opt=ami_names)   
+
+
 
 @app.route("/gcp",methods=["POST"])
 def gcp_post():
-	pairs={}
+	terraform_command_variables_and_value={}
+
 	prefix=request.form['vmname']
-	pairs['prefix']=prefix
+	terraform_command_variables_and_value['prefix']=prefix
+	
 	boot_image=request.form['ami']
+	
 	file=request.files['file']
-	word=boot_image.split( )
-	boot_image=word[0]+"/"+word[1]
+	#boot image name contain space in and we need to append that to sub-parts using  / eg. (windows-cloud/windows-2019)
+	words=boot_image.split( )
+	boot_image=words[0]+"/"+words[1]
 	print(boot_image)
-	pairs['boot_image']=boot_image
+	
+	terraform_command_variables_and_value['boot_image']=boot_image
 	filename=secure_filename(file.filename)
+	
 	cwd = os.getcwd()
 	print(cwd)
+	
 	if(boot_image.find('Windows')!=-1 or boot_image.find('windows')!=-1 or boot_image.find('WINDOWS')!=-1):
 		cwd+="/gcp-win"
 	else:
 	    cwd+='/gcp'	
+	#saving the creadentials file in respective gcp terraform directory
 	file.save(os.path.join(cwd, secure_filename(file.filename)))
-	pairs['service_account_credentials_file_location']=filename
-	cmd=generateApplyCommand(pairs)
+	terraform_command_variables_and_value['service_account_credentials_file_location']=filename
+	
+	#Generate the command terraform apply and variable 
+	cmd=generateApplyCommand(terraform_command_variables_and_value)
 	print(cmd)
+    
+
 	if(boot_image.find('Windows')!=-1 or boot_image.find('windows')!=-1 or boot_image.find('WINDOWS')!=-1):
 		os.chdir("gcp-win")
 	else:
 		os.chdir("gcp")
-	#os.system('terraform init')
-	#os.system(cmd)
+	
+	os.system('terraform init')
+	
+	os.system(cmd)
+	
 	os.chdir("..")
+	
 	return render_template("gcp.html",title="gcp")
 
 
-@app.route('/getfile', methods=['GET','POST'])
-def getfile():
-    if request.method == 'POST':
 
-        # for secure filenames. Read the documentation.
-        file = request.files['file']
-        filename = secure_filename(file.filename) 
-
-        # os.path.join is used so that paths work in every operating system
-        file.save(filename)
-        lines = []
-        with open(filename) as f:
-        	lines = f.readlines()
-        count = 0
-        for line in lines:
-        	result = line.find('=')
-        	print(line[result+1:])      
-
-
-    else:
-        result = request.args.get['myfile']
-    return result
 
 
 
