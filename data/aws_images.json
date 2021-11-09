@@ -129,5 +129,71 @@
         "os_name" : "Windows_Server-2012-R2_RTM-English-64Bit",
         "ami_id" : "ami-05a67d445b05c1e48",
         "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-15-sp2",
+        "ami_id" : "ami-0f052119b3c7e61d1",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5",
+        "ami_id" : "ami-04aa88aebb9fefd83",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-15-sp1",
+        "ami_id" : "ami-001816027222f96ba",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-manager-4-0-server-byos",
+        "ami_id" : "ami-00329096b91bab367",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-manager-4-0-proxy-byos",
+        "ami_id" : "ami-003dd614f3b667524",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-11-sp4-byos",
+        "ami_id" : "ami-009b213a22a9afa4b",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5-byos",
+        "ami_id" : "ami-009c145a2ff490186",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-manager-3-2-proxy-byos",
+        "ami_id" : "ami-00a6ca2627295f6d5",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5-byos",
+        "ami_id" : "ami-009c145a2ff490186",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5-byos",
+        "ami_id" : "ami-009c145a2ff490186",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5-byos",
+        "ami_id" : "ami-009c145a2ff490186",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
     }
 ]
