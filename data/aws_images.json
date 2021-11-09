@@ -9,5 +9,95 @@
         "os_name" : "windows-11",
         "ami_id" : "random_string_windows",
         "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.5.0",
+        "ami_id" : "ami-0105142650df1b53d",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.4.0",
+        "ami_id" : "ami-0ba62214afa52bec7",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.3.0",
+        "ami_id" : "ami-03d64741867e7bb94",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.2",
+        "ami_id" : "ami-015d9f9ba68b67486",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.1.0",
+        "ami_id" : "ami-02b8373e524fcbb13",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.0.0",
+        "ami_id" : "ami-0099847d600887c9f",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.9",
+        "ami_id" : "ami-04d7524f0f99dcb18",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.8",
+        "ami_id" : "ami-0514e35fdff0030d9",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.7",
+        "ami_id" : "ami-0170fc126935d44c3",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.6",
+        "ami_id" : "ami-006b2db4ca7e39d7d",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.5",
+        "ami_id" : "ami-0376bbf9be9eac670",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.3",
+        "ami_id" : "ami-0932686c",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.2",
+        "ami_id" : "ami-0a33696f",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-6.10",
+        "ami_id" : "ami-00d151061fdb20f59",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-6.9",
+        "ami_id" : "ami-05ecb660",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
     }
 ]
