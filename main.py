@@ -3,6 +3,11 @@ from werkzeug.utils import secure_filename
 import os
 import json
 import re
+import subprocess 
+import flask
+import time 
+import io
+
 app = Flask(__name__)
 
 #function to generate the terraform apply command with parameters
@@ -14,8 +19,11 @@ def generateApplyCommand(pairs,st="apply"):
 
 
 #home page route 
+def test():
+	os.system('echo "prathamesh"')
 @app.route("/", methods=['GET','POST'])
 def view_home():
+
     return render_template("index.html", title="Home Page")
 
 #Aws route
@@ -112,6 +120,25 @@ def aws_post():
 	cmd += " -destroy" # destroys infrastructure
 	print(cmd)
 	os.system(cmd)"""
+
+
+	#terminal code is here
+	changedirectory="cd"+" "+directory
+	os.chdir(directory)
+	proc = subprocess.Popen("terraform init",shell=True,stdout=subprocess.PIPE)
+	proc1=subprocess.Popen('ls',shell=True,stdout=subprocess.PIPE)
+	
+	os.chdir("..")
+	my_output=[]
+	for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+		my_output.append(line)
+	for line in io.TextIOWrapper(proc1.stdout, encoding="utf-8"):
+		my_output.append(line)
+	return render_template("terminal.html", my_output=my_output)	
+
+
+
+
 	return render_template("aws.html", title="Aws")    
 
 
@@ -142,67 +169,76 @@ def azure():
 	return render_template("azure.html", title="Azure",opt=lines,credential=credentials)
 @app.route("/azure", methods=['POST'])
 def azure_post():
-
-	terraform_command_variables_and_value={}
-	
+    directory="azure"
+    terraform_command_variables_and_value={}
     
-	prefix=request.form['vmname']
-	terraform_command_variables_and_value['prefix']=prefix
-	
-	
-	ami=request.form['ami']
-	cred=request.form['cred']
-	
-	sku=""
-	publisher=""
-	version=""
-	#loading the ami name and publisher file for finding out sku publisher offer for azure image
-	try:
-		data = json.loads(open("data/azure_images.json").read())
-	except:
-		print("Please provide input.json")
-		exit(0)
-	#finding out which operating systenm is selected by the user comparing through the key in json file
-	operating_system_selected_by_user=""	
-	for key in data:
-	    if ami.find(key)!=-1:
-	       operating_system_selected_by_user=key
-	       break
-	print(operating_system_selected_by_user)
+    prefix=request.form['vmname']
+    terraform_command_variables_and_value['prefix']=prefix
 
-	for i in data[operating_system_selected_by_user]:
-		if i['urn']==ami:
-			terraform_command_variables_and_value['offer']=i['offer']
-			terraform_command_variables_and_value['sku']=i['sku']
-			terraform_command_variables_and_value['publisher']=i['publisher']
-			terraform_command_variables_and_value['image_version']=i['version']
-	
-	try:
-		data2 = json.loads(open("data/azure_credentials.json").read())
-	except:
-		print("Please provide azure_credentials.json")
+    ami=request.form['ami']
+    cred=request.form['cred']
 
-	
-	for i in data2['azure_credentials']:
-		if cred==i['client_id']:
-			terraform_command_variables_and_value['subscription_id']=i['subscription_id']
-			terraform_command_variables_and_value['tenant_id']=i['tenant_id']
-			terraform_command_variables_and_value['client_id']=cred
-			
-			
-			terraform_command_variables_and_value['client_secret']=i['client_secret']
-		
-    	
-	cmd=generateApplyCommand(terraform_command_variables_and_value)
-	print(cmd)
-	"""
-	os.chdir("azure")
-	os.system("terraform init")
-	os.system (cmd)
-	#os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
-	destory =generateApplyCommand(pairs,"destory")
-	os.system(destory)"""
-	return render_template("azure.html", title="Azure")
+
+
+    sku=""
+    publisher=""
+    version=""
+
+    #loading the ami name and publisher file for finding out sku publisher offer for azure image
+    try:
+    	data = json.loads(open("data/azure_images.json").read())
+    except:
+    	print("Please provide input.json")
+    	exit(0)
+    #finding out which operating systenm is selected by the user comparing through the key in json file
+    operating_system_selected_by_user=""
+    for key in data:
+    	if ami.find(key)!=-1:
+    		operating_system_selected_by_user=key
+    		break
+    print(operating_system_selected_by_user)
+
+    for i in data[operating_system_selected_by_user]:
+    	if i['urn']==ami:
+    		terraform_command_variables_and_value['offer']=i['offer']
+    		terraform_command_variables_and_value['sku']=i['sku']
+    		terraform_command_variables_and_value['publisher']=i['publisher']
+    		terraform_command_variables_and_value['image_version']=i['version']
+
+    try:
+    	data2 = json.loads(open("data/azure_credentials.json").read())
+    except:
+    	print("Please provide azure_credentials.json")
+
+    for i in data2['azure_credentials']:
+    	if cred==i['client_id']:
+    		terraform_command_variables_and_value['subscription_id']=i['subscription_id']
+    		terraform_command_variables_and_value['tenant_id']=i['tenant_id']
+    		terraform_command_variables_and_value['client_id']=cred
+    		terraform_command_variables_and_value['client_secret']=i['client_secret']
+    
+    cmd=generateApplyCommand(terraform_command_variables_and_value)
+    print(cmd)
+    """
+    os.chdir("azure")
+    os.system("terraform init")
+    os.system (cmd)
+    #os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
+    destory =generateApplyCommand(pairs,"destory")
+    os.system(destory)"""
+
+    changedirectory="cd"+" "+directory
+    os.chdir(directory)
+    proc = subprocess.Popen("terraform init",shell=True,stdout=subprocess.PIPE)
+    proc1=subprocess.Popen('ls',shell=True,stdout=subprocess.PIPE)
+    os.chdir("..")
+    my_output=[]
+    for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+    	my_output.append(line)
+    for line in io.TextIOWrapper(proc1.stdout, encoding="utf-8"):
+    	my_output.append(line)
+    return render_template("terminal.html", my_output=my_output)
+	#return render_template("azure.html", title="Azure")
 
 
 
@@ -273,6 +309,9 @@ def gcp_post():
 	cmd=generateApplyCommand(terraform_command_variables_and_value)
 	print(cmd)
 	
+
+	#keep following code for testing
+	"""
 	os.chdir(directory)
 	os.system('terraform init -upgrade')
 	os.system(cmd)
@@ -284,8 +323,26 @@ def gcp_post():
 	if len(request.form.getlist("AlreadyConfigured")) == 0:
 		os.remove(filename)
 		
+	os.chdir("..")"""
+
+
+	#terminal code is added here
+	changedirectory="cd"+" "+directory
+	os.chdir(directory)
+	proc = subprocess.Popen("terraform init",shell=True,stdout=subprocess.PIPE)
+	proc1=subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+	
 	os.chdir("..")
-	return render_template("gcp.html",title="gcp")
+	my_output=[]
+	for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+		my_output.append(line)
+	for line in io.TextIOWrapper(proc1.stdout, encoding="utf-8"):
+		my_output.append(line)
+	return render_template("terminal.html", my_output=my_output)		
+
+
+
+	#return render_template("gcp.html",title="gcp")
 
 
 
