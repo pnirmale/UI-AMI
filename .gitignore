@@ -4,3 +4,4 @@ __py*
 */providers.tf
 data/azure_credentials.json
 .env
+.DS_Store 
