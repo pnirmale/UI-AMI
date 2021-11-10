@@ -29,7 +29,7 @@ def aws_post():
 	input_data = eval(request.form.getlist('ami')[0])
 	region = input_data.get("region")
 
-	if re.search("windows",input_data["os_name"]):
+	if re.search("windows",input_data["os_name"],re.IGNORECASE):
 		directory = "aws-win"
 	
 	pairs={} 
@@ -53,10 +53,10 @@ def aws_post():
 
 		for line in lines:
 			tmp = line.replace(' ','')[:-1]
-			if re.search("access",line) and re.search("key",line) and re.search("secret",line) == None:
+			if re.search("access",line,re.IGNORECASE) and re.search("key",line,re.IGNORECASE) and re.search("secret",line,re.IGNORECASE) == None:
 				result = tmp.find('=')
 				access_key=tmp[result+1:]
-			if re.search("key",line) and re.search("secret",line):
+			if re.search("key",line,re.IGNORECASE) and re.search("secret",line,re.IGNORECASE):
 				result = tmp.find('=')
 				secret_key=tmp[result+1:]
 
@@ -103,86 +103,85 @@ def aws_post():
 
 @app.route("/azure",methods=['GET'])
 def azure():
-	try:
-		data = json.loads(open("input.json").read())
-	except:
-		print("Please provide input.json")
-		exit(0)
+	data = json.loads(open("data/azure_images.json").read())
+
 	lines=[]
-	for i in data['CentOS']:
-		print(i['urn'])
-		lines.append(i['urn'])
-	data2=[]
+	for i in data:
+		lines.append({ 'offer' : i['offer'] + i['sku'], 'urn' : i['urn']})
+
+	credentials=[]
 	try:
-		data2 = json.loads(open("azure_credentials.json").read())
+		data2 = json.loads(open("data/azure_credentials.json").read())
+		for i in data2['azure_credentials']:
+			credentials.append(i['client_id'])
 	except:
 		print("Please provide azure_credentials.json")
-	credentials=[]
-	for i in data2['azure_credentials']:
-		print(i['client_id'])
-		credentials.append(i['client_id'])
 		
 	return render_template("azure.html", title="Azure",opt=lines,credential=credentials)
+
 @app.route("/azure", methods=['POST'])
 def azure_post():
+	directory = 'azure'
+	terraform_command_variables_and_value={}
 
-	pairs={}
-	
-
-	prefix=request.form['vmname']
-	pairs['prefix']=prefix
-	user=request.form['user']
-	pairs['user']=user
-	password=request.form['Password']
-	#pairs['password']=password
-	region=request.form['region']
-	pairs['location']=region
-	os1=request.form['os']
-	#pairs['os']=os
-	ami=request.form['ami']
+	ami=eval(request.form.getlist('ami')[0])['urn']
 	cred=request.form['cred']
-	#pairs['ami']=ami
-	sku=""
-	publisher=""
-	version=""
+
+	if re.search('windows',ami,re.IGNORECASE):
+		directory = 'azure-win'
+
+	urn_list = ami.split(':')
+
+	terraform_command_variables_and_value['publisher'] = urn_list[0]
+	terraform_command_variables_and_value['offer'] = urn_list[1]
+	terraform_command_variables_and_value['sku'] = urn_list[2]
+	terraform_command_variables_and_value['image_version'] = urn_list[3]
+	
 	try:
-		data = json.loads(open("input.json").read())
-	except:
-		print("Please provide input.json")
-		exit(0)
-	for i in data['CentOS']:
-		if i['urn']==ami:
-			pairs['offer']=i['offer']
-			pairs['sku']=i['sku']
-			pairs['publisher']=i['publisher']
-			pairs['image_version']=i['version']
-	data2=[]
-	try:
-		data2 = json.loads(open("azure_credentials.json").read())
+		data2 = json.loads(open("data/azure_credentials.json").read())
 	except:
 		print("Please provide azure_credentials.json")
-	credentials=[]
+
 	for i in data2['azure_credentials']:
 		if cred==i['client_id']:
-			pairs['subscription_id']=i['subscription_id']
-			pairs['tenant_id']=i['tenant_id']
-			pairs['client_id']=cred
-			
-			
-			pairs['client_secret']=i['client_secret']
-		
+
+			subscription_id = i['subscription_id'].replace(' ','')
+			client_id = i['client_id'].replace(' ','')
+			client_secret = i['client_secret'].replace(' ','')
+			tenant_id = i['tenant_id'].replace(' ','')
+
+			terraform_command_variables_and_value['client_id'] = client_id
+			terraform_command_variables_and_value['client_secret'] = client_secret
+			terraform_command_variables_and_value['tenant_id'] = tenant_id
+
+			content = '''
+				provider "azurerm" {{
+					features {{}}
+					subscription_id   =  "{subscription_id}"
+					client_id         =  "{client_id}"
+					client_secret     =  "{client_secret}"
+					tenant_id         =  "{tenant_id}"
+				}}
+			'''
+			str = content.format(subscription_id =subscription_id,tenant_id=tenant_id,client_id =client_id,client_secret=client_secret)
+
+			os.chdir(directory)
+			provider_file = open('providers.tf','w')
+			provider_file.write(str)
+			provider_file.close()
+			os.chdir('..')
     	
-	cmd=generateApplyCommand(pairs)
+	cmd=generateApplyCommand(terraform_command_variables_and_value)
 	print(cmd)
 	
-	os.chdir("azure")
-	
-	os.system("terraform init")
+	os.chdir(directory)
+	os.system("terraform init -upgrade")
 	os.system (cmd)
-	#os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
-	#destory =generateApplyCommand(pairs,"destory")
-	#os.system(destory)
+	os.system("terraform state rm \"azurerm_image.my-image\" ")
+	cmd += ' -destroy'
+	os.system(cmd)
 	return render_template("azure.html", title="Azure")
+
 
 @app.route("/gcp")
 def gcp():
@@ -200,7 +199,7 @@ def gcp_post():
 	boot_image = request.form['ami']
 	project = request.form['project']
 
-	if re.search('windows',boot_image):
+	if re.search('windows',boot_image,re.IGNORECASE):
 		directory = "gcp-win"
 
 	pairs={}
