@@ -8,6 +8,7 @@ from shelljob import proc
 
 app = Flask(__name__)
 
+MIME_TYPE = 'text/javascript'
 
 @app.route("/", methods=['GET','POST'])
 def view_home():
@@ -121,7 +122,7 @@ def aws_post():
 	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
 	print(applyCommand,destroyCommand)
 
-	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= 'text/html' )
+	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= MIME_TYPE )
 
 @app.route("/azure",methods=['GET'])
 def azure():
@@ -194,7 +195,7 @@ def azure_post():
 		destroyCommand=generateApplyCommand(terraform_command_variables_and_value,"destroy")
 		print(applyCommand,destroyCommand)
 
-		return flask.Response(show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= 'text/html' )
+		return flask.Response(show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= MIME_TYPE )
 	except:
 		print("Please provide azure_credentials.json")
 		return render_template('error.html')
@@ -262,7 +263,7 @@ def gcp_post():
 	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
 	print(applyCommand,destroyCommand)
 
-	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= 'text/html' )
+	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= MIME_TYPE )
 
 if __name__ == '__main__':
    app.run(debug = True ,port=2000)
