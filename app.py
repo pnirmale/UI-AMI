@@ -3,6 +3,9 @@ from werkzeug.utils import secure_filename
 import os
 import json
 import re
+import flask
+from shelljob import proc
+
 app = Flask(__name__)
 
 
@@ -15,10 +18,35 @@ def aws():
 	lines = json.loads(open("data/aws_images.json").read())
 	return render_template("aws.html", title="Aws",opt=lines)   
 
+def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terraform_destroy_proc,applyCommand,destroyCommand):
+		
+		os.chdir(directory)
+		initialize_proc.run('terraform init')
 
-def generateApplyCommand(pairs,st="apply"):
-    str = "terraform " + st +" --auto-approve"
-    for key,value in pairs.items():
+		while initialize_proc.is_pending():
+			lines = initialize_proc.readlines()
+			for proc, line in lines:
+				yield line+"\n".encode("utf-8")
+
+		terraform_apply_proc.run(applyCommand)
+
+		while terraform_apply_proc.is_pending():
+			lines = terraform_apply_proc.readlines()
+			for proc, line in lines:
+				yield line
+		
+		terraform_destroy_proc.run(destroyCommand)
+
+		while terraform_destroy_proc.is_pending():
+			lines = terraform_destroy_proc.readlines()
+			for proc, line in lines:
+				yield line
+				
+		os.chdir('..')
+
+def generateApplyCommand(terraform_command_variables_and_value,st="apply"):
+    str = "terraform " + st +" --auto-approve  -lock=false "
+    for key,value in terraform_command_variables_and_value.items():
     	str += " -var "+key+"=\""+value+"\""	
     return str
 
@@ -32,11 +60,11 @@ def aws_post():
 	if re.search("windows",input_data["os_name"],re.IGNORECASE):
 		directory = "aws-win"
 	
-	pairs={} 
+	terraform_command_variables_and_value={} 
 	for key,v in input_data.items():
 		if key == 'os_name':
 			continue
-		pairs[key] = v
+		terraform_command_variables_and_value[key] = v
 
 	# configures providers.tf	
 	if len(request.form.getlist("AlreadyConfigured")) == 0:
@@ -89,17 +117,11 @@ def aws_post():
 		provider_file.close()
 		os.chdir("..")
 		
-	cmd=generateApplyCommand(pairs)
-	print(cmd)
-	
-	os.chdir(directory)
-	os.system("terraform init -upgrade")
-	os.system (cmd)
-	os.system("terraform state rm \"aws_ami_from_instance.ami\" ")
-	cmd += " -destroy" # destroys infrastructure
-	print(cmd)
-	os.system(cmd)
-	return render_template("aws.html", title="Aws")
+	applyCommand=generateApplyCommand(terraform_command_variables_and_value)
+	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
+	print(applyCommand,destroyCommand)
+
+	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= 'text/html' )
 
 @app.route("/azure",methods=['GET'])
 def azure():
@@ -139,49 +161,43 @@ def azure_post():
 	
 	try:
 		data2 = json.loads(open("data/azure_credentials.json").read())
+		for i in data2['azure_credentials']:
+			if cred==i['client_id']:
+
+				subscription_id = i['subscription_id'].replace(' ','')
+				client_id = i['client_id'].replace(' ','')
+				client_secret = i['client_secret'].replace(' ','')
+				tenant_id = i['tenant_id'].replace(' ','')
+
+				terraform_command_variables_and_value['client_id'] = client_id
+				terraform_command_variables_and_value['client_secret'] = client_secret
+				terraform_command_variables_and_value['tenant_id'] = tenant_id
+
+				content = '''
+					provider "azurerm" {{
+						features {{}}
+						subscription_id   =  "{subscription_id}"
+						client_id         =  "{client_id}"
+						client_secret     =  "{client_secret}"
+						tenant_id         =  "{tenant_id}"
+					}}
+				'''
+				str = content.format(subscription_id =subscription_id,tenant_id=tenant_id,client_id =client_id,client_secret=client_secret)
+
+				os.chdir(directory)
+				provider_file = open('providers.tf','w')
+				provider_file.write(str)
+				provider_file.close()
+				os.chdir('..')
+			
+		applyCommand=generateApplyCommand(terraform_command_variables_and_value)
+		destroyCommand=generateApplyCommand(terraform_command_variables_and_value,"destroy")
+		print(applyCommand,destroyCommand)
+
+		return flask.Response(show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= 'text/html' )
 	except:
 		print("Please provide azure_credentials.json")
-
-	for i in data2['azure_credentials']:
-		if cred==i['client_id']:
-
-			subscription_id = i['subscription_id'].replace(' ','')
-			client_id = i['client_id'].replace(' ','')
-			client_secret = i['client_secret'].replace(' ','')
-			tenant_id = i['tenant_id'].replace(' ','')
-
-			terraform_command_variables_and_value['client_id'] = client_id
-			terraform_command_variables_and_value['client_secret'] = client_secret
-			terraform_command_variables_and_value['tenant_id'] = tenant_id
-
-			content = '''
-				provider "azurerm" {{
-					features {{}}
-					subscription_id   =  "{subscription_id}"
-					client_id         =  "{client_id}"
-					client_secret     =  "{client_secret}"
-					tenant_id         =  "{tenant_id}"
-				}}
-			'''
-			str = content.format(subscription_id =subscription_id,tenant_id=tenant_id,client_id =client_id,client_secret=client_secret)
-
-			os.chdir(directory)
-			provider_file = open('providers.tf','w')
-			provider_file.write(str)
-			provider_file.close()
-			os.chdir('..')
-    	
-	cmd=generateApplyCommand(terraform_command_variables_and_value)
-	print(cmd)
-	
-	os.chdir(directory)
-	os.system("terraform init -upgrade")
-	os.system (cmd)
-	os.system("terraform state rm \"azurerm_image.my-image\" ")
-	cmd += ' -destroy'
-	os.system(cmd)
-	return render_template("azure.html", title="Azure")
-
+		return render_template('error.html')
 
 @app.route("/gcp")
 def gcp():
@@ -202,8 +218,8 @@ def gcp_post():
 	if re.search('windows',boot_image,re.IGNORECASE):
 		directory = "gcp-win"
 
-	pairs={}
-	pairs["boot_image"] = boot_image
+	terraform_command_variables_and_value={}
+	terraform_command_variables_and_value["boot_image"] = boot_image
 
 	if len(request.form.getlist("AlreadyConfigured")) == 0:
 		file=request.files['file']
@@ -242,22 +258,11 @@ def gcp_post():
 		provider_file.close()
 		os.chdir("..")
 	
-	cmd=generateApplyCommand(pairs)
-	print(cmd)
-	os.chdir(directory)
-	os.system('terraform init -upgrade')
-	os.system(cmd)
-	os.system("terraform state rm \"google_compute_machine_image.image\" ")
-	cmd += " -destroy" # destroys infrastructure
-	print(cmd)
-	os.system(cmd)
+	applyCommand=generateApplyCommand(terraform_command_variables_and_value)
+	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
+	print(applyCommand,destroyCommand)
 
-	if len(request.form.getlist("AlreadyConfigured")) == 0:
-		os.remove(filename)
-		
-	os.chdir("..")
-	return render_template("gcp.html",title="gcp")
-
+	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= 'text/html' )
 
 if __name__ == '__main__':
    app.run(debug = True ,port=2000)
