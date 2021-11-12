@@ -75,12 +75,17 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <label> Choose Softwares to install</label>
+                    <select class="form-select" id='ansibleList' data-list='{{ ansibleList }}' multiple="multiple" name="software-list">
+                        <option selected>Open this select menu</option>
+                    </select>
                     <div class="form-check">
                         <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                           Check if you have configured already (No need to select configuration file if you have configured locally)
                         </label>
                     </div>
+                   
                     <div class="form-group">
                         <label for="file">Choose aws Creadiantial file</label>
                         <input type="file" class="form-control-file" id="file" name="file">
@@ -88,7 +93,30 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
-        </div>
+        </div> 
+        <script>
+            const x = document.getElementById('ami')
+            const ansibleListDropdown = document.getElementById('ansibleList')
+            const { windows,unix } = JSON.parse(ansibleListDropdown.dataset.list.replace(/'/gi,'"') )
+
+            x.addEventListener('change',()=>{
+                
+                let k = JSON.parse(x.value.replace(/'/gi,'"'))
+                if(k.os_name.includes('windows')){
+                    content ="" 
+                    windows.forEach(e=>content += `<option value=${e}> ${e} </option>`)
+                    console.log(content)
+                    ansibleListDropdown.innerHTML = content
+                }
+                else{
+                    console.log(unix)
+                    content ="" 
+                    unix.forEach(e=>content += `<option value=${e}> ${e} </option>`)
+                    console.log(content)
+                    ansibleListDropdown.innerHTML = content
+                }
+            })
+        </script>
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
