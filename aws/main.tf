@@ -78,7 +78,7 @@ resource "aws_instance" "web" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${self.public_ip}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml"
+    command = format("%s %s","ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${self.public_ip}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml",var.ansible_command)
   }
 
   tags = {

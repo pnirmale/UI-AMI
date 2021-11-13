@@ -10,6 +10,12 @@ app = Flask(__name__)
 
 MIME_TYPE = 'text/javascript'
 
+def getAnsibleList():
+	return {
+		'windows' : ['Python3','Notepad++','GoogleChrome'],
+		'unix' : ['MongoDB']
+	}
+
 @app.route("/", methods=['GET','POST'])
 def view_home():
     return render_template("index.html", title="Home Page")
@@ -17,7 +23,7 @@ def view_home():
 @app.route("/aws")
 def aws():
 	lines = json.loads(open("data/aws_images.json").read())
-	return render_template("aws.html", title="Aws",opt=lines)   
+	return render_template("aws.html", title="Aws",opt=lines,ansibleList = getAnsibleList())   
 
 def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terraform_destroy_proc,applyCommand,destroyCommand):
 		
@@ -51,17 +57,31 @@ def generateApplyCommand(terraform_command_variables_and_value,st="apply"):
     	str += " -var "+key+"=\""+value+"\""	
     return str
 
+def generateAnsibleCommand(list_of_vars):
+	cmd = "--extra-vars '"
+	for key,value in list_of_vars.items():
+			cmd += key + "=true "
+	return cmd + "'"
+
 @app.route("/aws", methods=['POST'])
 def aws_post():
 	directory = "aws"
 
+	list_softwares = json.loads(json.dumps(request.form))
+	try:
+		list_softwares.pop('ami')
+		list_softwares.pop('AlreadyConfigured')
+	except:
+		print('a')
+		
 	input_data = eval(request.form.getlist('ami')[0])
 	region = input_data.get("region")
 
 	if re.search("windows",input_data["os_name"],re.IGNORECASE):
 		directory = "aws-win"
 	
-	terraform_command_variables_and_value={} 
+	terraform_command_variables_and_value={}
+	terraform_command_variables_and_value['ansible_command'] = generateAnsibleCommand(list_softwares) 
 	for key,v in input_data.items():
 		if key == 'os_name':
 			continue
@@ -117,7 +137,7 @@ def aws_post():
 		provider_file.write(content.format(region=region))
 		provider_file.close()
 		os.chdir("..")
-		
+
 	applyCommand=generateApplyCommand(terraform_command_variables_and_value)
 	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
 	print(applyCommand,destroyCommand)
@@ -266,4 +286,5 @@ def gcp_post():
 	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= MIME_TYPE )
 
 if __name__ == '__main__':
+   app.config["TEMPLATES_AUTO_RELOAD"] = True
    app.run(debug = True ,port=2000)

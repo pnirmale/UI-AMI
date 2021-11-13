@@ -75,10 +75,13 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <label> Choose Softwares to install</label>
+                    <!-- <label> Choose Softwares to install</label>
                     <select class="form-select" id='ansibleList' data-list='{{ ansibleList }}' multiple="multiple" name="software-list">
                         <option selected>Open this select menu</option>
-                    </select>
+                    </select> -->
+                    <div id="ansibleList" name="ansibleList" class="form-group" data-list='{{ ansibleList }}'>
+                        
+                    </div>
                     <div class="form-check">
                         <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
@@ -104,14 +107,22 @@
                 let k = JSON.parse(x.value.replace(/'/gi,'"'))
                 if(k.os_name.includes('windows')){
                     content ="" 
-                    windows.forEach(e=>content += `<option value=${e}> ${e} </option>`)
+                    windows.forEach(e=>content += `
+                    <input class="form-check-input" type="checkbox"  name=${e} value=${e} id="${e}">
+  <label class="form-check-label" for="flexCheckDefault">
+    ${e}
+  </label>`)
                     console.log(content)
                     ansibleListDropdown.innerHTML = content
                 }
                 else{
                     console.log(unix)
                     content ="" 
-                    unix.forEach(e=>content += `<option value=${e}> ${e} </option>`)
+                    unix.forEach(e=>content += `
+                    <input class="form-check-input" type="checkbox" name=${e} value=${e} id="${e}">
+  <label class="form-check-label" for="flexCheckDefault">
+    ${e}
+  </label>`)
                     console.log(content)
                     ansibleListDropdown.innerHTML = content
                 }
