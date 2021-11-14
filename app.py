@@ -12,7 +12,7 @@ MIME_TYPE = 'text/javascript'
 
 def getAnsibleList():
 	return {
-		'windows' : ['Python3','Notepad++','GoogleChrome'],
+		'windows' : ['Python3','NotepadPlusPlus','GoogleChrome'],
 		'unix' : ['MongoDB']
 	}
 
