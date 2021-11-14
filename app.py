@@ -25,7 +25,7 @@ def aws():
 	lines = json.loads(open("data/aws_images.json").read())
 	return render_template("aws.html", title="Aws",opt=lines,ansibleList = getAnsibleList())   
 
-def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terraform_destroy_proc,applyCommand,destroyCommand):
+def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terraform_state_rm_proc,terraform_destroy_proc,applyCommand,remove_image_from_state_file_command,destroyCommand):
 		
 		os.chdir(directory)
 		initialize_proc.run('terraform init')
@@ -40,6 +40,13 @@ def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terrafo
 		while terraform_apply_proc.is_pending():
 			lines = terraform_apply_proc.readlines()
 			for proc, line in lines:
+				yield line
+
+		terraform_state_rm_proc.run(remove_image_from_state_file_command)
+
+		while terraform_state_rm_proc.is_pending():
+			lines = terraform_state_rm_proc.readlines()
+			for proc,line in lines:
 				yield line
 		
 		terraform_destroy_proc.run(destroyCommand)
@@ -140,9 +147,11 @@ def aws_post():
 
 	applyCommand=generateApplyCommand(terraform_command_variables_and_value)
 	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
+	remove_image_from_state_file_command = 'terraform state rm "aws_ami_from_instance.ami"'
+
 	print(applyCommand,destroyCommand)
 
-	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= MIME_TYPE )
+	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand), mimetype= MIME_TYPE )
 
 @app.route("/azure",methods=['GET'])
 def azure():
@@ -222,9 +231,10 @@ def azure_post():
 			
 		applyCommand=generateApplyCommand(terraform_command_variables_and_value)
 		destroyCommand=generateApplyCommand(terraform_command_variables_and_value,"destroy")
+		remove_image_from_state_file_command = 'terraform state rm "azurerm_image.my-image"'
 		print(applyCommand,destroyCommand)
 
-		return flask.Response(show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= MIME_TYPE )
+		return flask.Response(show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand), mimetype= MIME_TYPE )
 	except:
 		print("Please provide azure_credentials.json")
 		return render_template('error.html')
@@ -299,9 +309,10 @@ def gcp_post():
 	
 	applyCommand=generateApplyCommand(terraform_command_variables_and_value)
 	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
+	remove_image_from_state_file_command = 'terraform state rm "google_compute_machine_image.image"'
 	print(applyCommand,destroyCommand)
 
-	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),applyCommand,destroyCommand), mimetype= MIME_TYPE )
+	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand), mimetype= MIME_TYPE )
 
 if __name__ == '__main__':
    app.config["TEMPLATES_AUTO_RELOAD"] = True
