@@ -235,7 +235,7 @@ def gcp():
 		lines=[]
 		for line in f.readlines():
 			lines.append(line[:-1])
-	return render_template("gcp.html",title="gcp",opt=lines)
+	return render_template("gcp.html",title="gcp",opt=lines,ansibleList = getAnsibleList())
 
 @app.route("/gcp",methods=["POST"])
 def gcp_post():
@@ -245,11 +245,20 @@ def gcp_post():
 	boot_image = request.form['ami']
 	project = request.form['project']
 
+	list_softwares = json.loads(json.dumps(request.form))
+	try:
+		list_softwares.pop('project')
+		list_softwares.pop('ami')
+		list_softwares.pop('AlreadyConfigured')
+	except:
+		print('a')
+
 	if re.search('windows',boot_image,re.IGNORECASE):
 		directory = "gcp-win"
 
 	terraform_command_variables_and_value={}
 	terraform_command_variables_and_value["boot_image"] = boot_image
+	terraform_command_variables_and_value['ansible_command'] = generateAnsibleCommand(list_softwares) 
 
 	if len(request.form.getlist("AlreadyConfigured")) == 0:
 		file=request.files['file']

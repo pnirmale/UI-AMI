@@ -37,3 +37,6 @@ variable boot_image {
     description = "Specify boot image to be used"
     default = "ubuntu-os-cloud/ubuntu-1804-lts"
 }
+variable ansible_command {
+    description = "Command to pass variables to ansible playbook"   
+}

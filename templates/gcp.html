@@ -58,6 +58,9 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div id="ansibleList" name="ansibleList" class="form-group" data-list='{{ ansibleList }}'>
+                        
+                    </div>
                     <div class="form-check">
                         <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
@@ -72,6 +75,37 @@
                 </form>
             </div>
         </div>
+        <script>
+            const x = document.getElementById('ami')
+            const ansibleListDropdown = document.getElementById('ansibleList')
+            const { windows,unix } = JSON.parse(ansibleListDropdown.dataset.list.replace(/'/gi,'"') )
+
+            x.addEventListener('change',()=>{
+                
+                // let k = JSON.parse(x.value.replace(/'/gi,'"'))
+                if(x.value.includes('windows')){
+                    content ="" 
+                    windows.forEach(e=>content += `
+                    <input class="form-check-input" type="checkbox"  name=${e} value=${e} id="${e}">
+  <label class="form-check-label" for="flexCheckDefault">
+    ${e}
+  </label>`)
+                    console.log(content)
+                    ansibleListDropdown.innerHTML = content
+                }
+                else{
+                    console.log(unix)
+                    content ="" 
+                    unix.forEach(e=>content += `
+                    <input class="form-check-input" type="checkbox" name=${e} value=${e} id="${e}">
+  <label class="form-check-label" for="flexCheckDefault">
+    ${e}
+  </label>`)
+                    console.log(content)
+                    ansibleListDropdown.innerHTML = content
+                }
+            })
+        </script>
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
