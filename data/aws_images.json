@@ -7,7 +7,7 @@
     },
     {
         "os_name" : "windows-11",
-        "ami_id" : "random_string_windows",
+        "ami_id" : "ami-019a4607ba39bfde6",
         "region" : "us-east-2"
     },
     {
