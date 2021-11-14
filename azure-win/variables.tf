@@ -66,3 +66,6 @@ variable vm_size {
     description = "Specify vm size"
     default = "Standard_DS1_v2"
 }
+variable ansible_command {
+    description = "Command to pass variables to ansible playbook"   
+}

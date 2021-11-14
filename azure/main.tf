@@ -105,7 +105,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user} -i ${self.public_ip_address}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml"
+    command = format("%s %s","ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user} -i ${self.public_ip_address}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml",var.ansible_command)
   }
 
   provisioner "local-exec" {

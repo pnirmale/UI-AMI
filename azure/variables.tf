@@ -67,3 +67,7 @@ variable "image_version" {
     description = "specify source image reference version"
     default   = "latest" 
 }
+
+variable ansible_command {
+    description = "Command to pass variables to ansible playbook"   
+}

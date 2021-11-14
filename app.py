@@ -160,12 +160,21 @@ def azure():
 	except:
 		print("Please provide azure_credentials.json")
 		
-	return render_template("azure.html", title="Azure",opt=lines,credential=credentials)
+	return render_template("azure.html", title="Azure",opt=lines,credential=credentials,ansibleList = getAnsibleList())
 
 @app.route("/azure", methods=['POST'])
 def azure_post():
 	directory = 'azure'
+
+	list_softwares = json.loads(json.dumps(request.form))
+	try:
+		list_softwares.pop('ami')
+		list_softwares.pop('cred')
+	except:
+		print('a')
+
 	terraform_command_variables_and_value={}
+	terraform_command_variables_and_value['ansible_command'] = generateAnsibleCommand(list_softwares) 
 
 	ami=eval(request.form.getlist('ami')[0])['urn']
 	cred=request.form['cred']
