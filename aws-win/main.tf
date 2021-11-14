@@ -120,7 +120,7 @@ resource "aws_instance" "web" {
     command="echo ansible_host_1 ansible_host=${self.public_ip} ansible_user=${var.user} ansible_password=${var.password} ansible_connection=${var.connection_type} ansible_winrm_server_cert_validation=ignore ansible_port=5985 > hosts"
   }
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/windows_playbook.yml"
+    command = format("%s %s","ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i hosts  ../ansible/windows_playbook.yml",var.ansible_command)
   }
   provisioner "local-exec" {
     command = "rm -rf hosts"

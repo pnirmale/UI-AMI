@@ -57,3 +57,7 @@ variable instance_type {
     description = "Specify instance type"
     default = "t2.micro"
 }
+
+variable ansible_command {
+    description = "Command to execute ansible playbook"
+}
