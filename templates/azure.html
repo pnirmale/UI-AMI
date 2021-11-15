@@ -69,8 +69,8 @@
                         </select>
                         
                     </div>
-                    <div id="ansibleList" name="ansibleList" class="form-group" data-list='{{ ansibleList }}'>
-                        
+                    <div id="ansibleList" name="ansibleList" class="form-group" data-list='{{ ansibleList }}'style="margin-top: 2rem;margin-bottom: 2rem;" >
+                        <h6>Choose Operating System from above to get list of available softwares </h6> 
                     </div>
                     <div class="form-group">
                         <select class="custom-select mr-sm-2" id="cred" name="cred">
@@ -92,27 +92,28 @@
             const { windows,unix } = JSON.parse(ansibleListDropdown.dataset.list.replace(/'/gi,'"') )
 
             x.addEventListener('change',()=>{
-                
+                content ="<h6>Choose softwares to install from following </h6>"
                 let k = JSON.parse(x.value.replace(/'/gi,'"'))
-                console.log(k)
                 if(k.urn.toLowerCase().includes('windows')){
-                    content ="" 
                     windows.forEach(e=>content += `
-                    <input class="form-check-input" type="checkbox"  name=${e} value=${e} id="${e}">
-  <label class="form-check-label" for="flexCheckDefault">
-    ${e}
-  </label>`)
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox"  name=${e} value=${e} id="${e}">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            ${e}
+                        </label>
+                    </div>`)
                     console.log(content)
                     ansibleListDropdown.innerHTML = content
                 }
                 else{
                     console.log(unix)
-                    content ="" 
                     unix.forEach(e=>content += `
-                    <input class="form-check-input" type="checkbox" name=${e} value=${e} id="${e}">
-  <label class="form-check-label" for="flexCheckDefault">
-    ${e}
-  </label>`)
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name=${e} value=${e} id="${e}">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            ${e}
+                        </label>
+                    </div>`)
                     console.log(content)
                     ansibleListDropdown.innerHTML = content
                 }
