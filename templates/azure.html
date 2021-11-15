@@ -82,7 +82,7 @@
                             
                             <option SELECTED data-tokens='0'>Choose available image</option>
                             {% for x in opt %}
-                                <option data-tokens='{{ x }}'>{{x.offer}}</option>
+                                <option data-tokens='{{ x }}' value='{{ x }}' >{{x.offer}}</option>
                             {% endfor %}
                         </select>
                     </div>

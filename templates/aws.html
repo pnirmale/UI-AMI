@@ -87,7 +87,7 @@
                         <select class="selectpicker" data-live-search="true" id="ami" name="ami">
                             <option SELECTED data-tokens='0'>Choose One</option>
                             {% for x in opt %}
-                                <option data-tokens='{{ x }}'>{{x.os_name}}</option>
+                                <option data-tokens='{{ x }}' value='{{ x }}'>{{x.os_name}}</option>
                             {% endfor %}
                         </select>
                     </div>
