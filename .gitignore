@@ -5,3 +5,4 @@ __py*
 data/azure_credentials.json
 .env
 .DS_Store 
+*/venv
