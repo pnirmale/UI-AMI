@@ -1,0 +1,11 @@
+- name: Install Nginx
+  zypper:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Start Nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: started

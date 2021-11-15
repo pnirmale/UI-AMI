@@ -1,0 +1,13 @@
+- name: Installs nginx web server 
+  apt:
+    name: nginx
+    state: present
+    update_cache: true
+  notify:
+    - start nginx
+    
+- name: start nginx 
+  service:
+    name: nginx
+    enabled: yes
+    state: started
