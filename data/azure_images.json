@@ -1,0 +1,327 @@
+[
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2016-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2016-Datacenter:14393.4283.2103051830",
+    "version": "14393.4283.2103051830"
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2019-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2012-R2-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2012-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2012-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2008-R2-SP1",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:latests",
+    "version": "latest"
+
+  },
+  {
+    "offer": "UbuntuServer",
+    "publisher": "Canonical",
+    "sku": "16.04-LTS",
+    "urn": "Canonical:UbuntuServer:16.04-LTS:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "UbuntuServer",
+    "publisher": "Canonical",
+    "sku": "18.04-LTS",
+    "urn": "Canonical:UbuntuServer:18.04-LTS:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "0001-com-ubuntu-server-focal",
+    "publisher": "Canonical",
+    "sku": "20_04-lts",
+    "urn": "Canonical:0001-com-ubuntu-server-focal:20_04-lts:20.04.202103250",
+    "version": "20.04.202103250"
+  },
+
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "6.9",
+    "urn": "OpenLogic:CentOS:6.9:6.9.20210812",
+    "version": "6.9.20210812"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "6.10",
+    "urn": "OpenLogic:CentOS:6.10:6.10.20181012",
+    "version": "6.10.20181012"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7.2",
+    "urn": "OpenLogic:CentOS:7.2:7.2.20160308",
+    "version": "7.2.20160308"
+  }, 
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7.3",
+    "urn": "OpenLogic:CentOS:7.3:7.3.20210812",
+    "version": "7.3.20210812"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7.4",
+    "urn": "OpenLogic:CentOS:7.4:7.4.20200220",
+    "version": "7.4.20200220"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7.5",
+    "urn": "OpenLogic:CentOS:7.5:7.5.201808150",
+    "version": "7.5.201808150"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7.6",
+    "urn": "OpenLogic:CentOS:7.6:7.6.20181219",
+    "version": "7.6.20181219"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7.7",
+    "urn": "OpenLogic:CentOS:7.7:7.7.20190920",
+    "version": "7.7.20190920"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7_8",
+    "urn": "OpenLogic:CentOS:7_8:7.8.2020051900",
+    "version": "7.8.2020051900"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "7_9",
+    "urn": "OpenLogic:CentOS:7_9:7.9.2021020400",
+    "version": "7.9.2021020400"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "8.0",
+    "urn": "OpenLogic:CentOS:8.0:8.0.20191030",
+    "version": "8.0.20191030"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "8_1",
+    "urn": "OpenLogic:CentOS:8_1:8.1.2020022700",
+    "version": "8.1.2020022700"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "8_2",
+    "urn": "OpenLogic:CentOS:8_2:8.2.2020062400",
+    "version": "8.2.2020062400"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "8_3",
+    "urn": "OpenLogic:CentOS:8_3:8.3.2020120900",
+    "version": "8.3.2020120900"
+  },
+  {
+    "offer": "CentOS",
+    "publisher": "OpenLogic",
+    "sku": "8_4",
+    "urn": "OpenLogic:CentOS:8_4:8.4.2021071900",
+    "version": "8.4.2021071900"
+  },
+  
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "6.10",
+    "urn": "RedHat:RHEL:6.10:6.10.2019061919",
+    "version": "6.10.2019061919"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.2",
+    "urn": "RedHat:RHEL:7.2:7.2.2017090717",
+    "version": "7.2.2017090717"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.3",
+    "urn": "RedHat:RHEL:7.3:7.3.2017090800",
+    "version": "7.3.2017090800"
+  },
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.4",
+    "urn": "RedHat:RHEL:7.4:7.4.2021051701",
+    "version": "7.4.2021051701"
+  },
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.5",
+    "urn": "RedHat:RHEL:7.5:7.5.2021072201",
+    "version": "7.5.2021072201"
+  },
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.6",
+    "urn": "RedHat:RHEL:7.6:7.6.2021051101",
+    "version": "7.6.2021051101"
+  },
+
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.7",
+    "urn": "RedHat:RHEL:7.7:7.7.2021052001",
+    "version": "7.7.2021052001"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7.8",
+    "urn": "RedHat:RHEL:7.8:7.8.2021051701",
+    "version": "7.8.2021051701"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "7_9",
+    "urn": "RedHat:RHEL:7_9:7.9.202110089",
+    "version": "7.9.202110089"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8",
+    "urn": "RedHat:RHEL:8:8.0.20191023",
+    "version": "8.0.20191023"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8.1",
+    "urn": "RedHat:RHEL:8.1:8.1.2021091101",
+    "version": "8.1.2021091101"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8.2",
+    "urn": "RedHat:RHEL:8.2:8.2.2021091101",
+    "version": "8.2.2021091101"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8_3",
+    "urn": "RedHat:RHEL:8_3:8.3.2021091101",
+    "version": "8.3.2021091101"
+  },
+  {
+    "offer": "RHEL",
+    "publisher": "RedHat",
+    "sku": "8_4",
+    "urn": "RedHat:RHEL:8_4:8.4.2021091101",
+    "version": "8.4.2021091101"
+  },
+  
+  {
+    "offer": "SLES-SAP-BYOS",
+    "publisher": "SUSE",
+    "sku": "12-SP3",
+    "urn": "SUSE:SLES-SAP-BYOS:12-SP3:2021.03.05",
+    "version": "2021.03.05"
+  },
+  {
+    "offer": "SLES-SAP-BYOS",
+    "publisher": "SUSE",
+    "sku": "12-sp4",
+    "urn": "SUSE:SLES-SAP-BYOS:12-sp4:2021.03.05",
+    "version": "2021.03.05"
+  },
+  {
+    "offer": "SLES-SAP-BYOS",
+    "publisher": "SUSE",
+    "sku": "12-sp4-gen2",
+    "urn": "SUSE:SLES-SAP-BYOS:12-sp4-gen2:2021.02.18",
+    "version": "2021.02.18"
+  },
+  {
+    "offer": "SLES-SAP-BYOS",
+    "publisher": "SUSE",
+    "sku": "15",
+    "urn": "SUSE:SLES-SAP-BYOS:15:2021.03.05",
+    "version": "2021.03.05"
+  },
+  {
+    "offer": "SLES-SAP-BYOS",
+    "publisher": "SUSE",
+    "sku": "15-gen2",
+    "urn": "SUSE:SLES-SAP-BYOS:15-gen2:2021.03.05",
+    "version": "2021.03.05"
+  },
+  {
+    "offer": "SLES-SAP-BYOS",
+    "publisher": "SUSE",
+    "sku": "gen2-12-sp4",
+    "urn": "SUSE:SLES-SAP-BYOS:gen2-12-sp4:2020.12.14",
+    "version": "2020.12.14"
+  },
+  {
+    "offer": "SLES-SAP-BYOS",
+    "publisher": "SUSE",
+    "sku": "gen2-15",
+    "urn": "SUSE:SLES-SAP-BYOS:gen2-15:2021.01.12",
+    "version": "2021.01.12"
+  }
+
+
+
+]

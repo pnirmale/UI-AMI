@@ -1,0 +1,7 @@
+__py*
+*/.terraform*
+*/terraform*
+*/providers.tf
+data/azure_credentials.json
+.env
+.DS_Store 
