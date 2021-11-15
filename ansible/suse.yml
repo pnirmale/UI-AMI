@@ -1,11 +1,16 @@
-- name: Install Nginx
-  zypper:
-    name: nginx
-    state: present
-    update_cache: yes
+- name: Add nginx repo
+  command: sudo zypper -n addrepo -G -t yum -c 'http://nginx.org/packages/sles/12' nginx
+  become: True
 
-- name: Start Nginx
-  service:
-    name: nginx
-    enabled: yes
-    state: started
+- name: Refreshing Packages
+  command: sudo zypper refresh
+  become: True
+
+# - name: Try
+#   command: sudo zypper -n install nginx
+#   become: True
+
+# - zypper:
+#     name: nginx
+#     state: latest
+#   become: True

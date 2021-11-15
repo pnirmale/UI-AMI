@@ -1,13 +1,9 @@
-- name: Installs nginx web server 
-  apt:
-    name: nginx
-    state: present
-    update_cache: true
-  notify:
-    - start nginx
-    
-- name: start nginx 
+- name: ensure nginx is at the latest version
+  apt: name=nginx state=latest
+  become: true
+
+- name: start nginx
   service:
     name: nginx
-    enabled: yes
     state: started
+  become: true

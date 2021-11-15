@@ -1,12 +1,17 @@
 - name: Terraform and Ansible Integration
   hosts: all
+  tasks:
 
-- include: debian.yml
-  when: ansible_os_family == 'Debian'
+    - name: Display Host OS Family
+      debug: 'msg="Host OS- {{ ansible_os_family }}"'
 
-- include: redhat.yml
-  when: ansible_os_family == 'RedHat'
+    - import_tasks: debian.yml
+      when: ansible_os_family == 'Debian'
 
-- include: suse.yml
-  when: ansible_os_family == 'Suse'
+    - import_tasks: redhat.yml
+      when: ansible_os_family == 'RedHat'
+    
+    - import_tasks: suse.yml
+      when: ansible_os_family == 'Suse'
+
     

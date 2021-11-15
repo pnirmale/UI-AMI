@@ -1,18 +1,17 @@
-- name: Install EPEL release (REDHAT)
-  yum: 
-    name: epel-release 
+- name: Add epel-release repo
+  yum:
+    name: epel-release
+    state: latest
+  become: True
+
+- name: Install nginx
+  yum:
+    name: nginx
     state: present
-    
-- name: Install nginx web server(REDHAT)
-  yum: 
-    name: nginx 
-    state: present
-    update_cache: true
-  notify:
-    - start nginx
-    
-- name: start nginx 
+  become: True
+
+- name: Start NGiNX
   service:
     name: nginx
-    enabled: yes
     state: started
+  become: True
