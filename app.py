@@ -13,7 +13,7 @@ MIME_TYPE = 'text/javascript'
 def getAnsibleList():
 	return {
 		'windows' : ['Python3','NotepadPlusPlus','GoogleChrome'],
-		'unix' : ['MongoDB']
+		'unix' : ['GoogleChrome','Git','Python3']
 	}
 
 @app.route("/", methods=['GET','POST'])
