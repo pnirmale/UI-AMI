@@ -1,16 +1,8 @@
-- name: Add nginx repo
-  command: sudo zypper -n addrepo -G -t yum -c 'http://nginx.org/packages/sles/12' nginx
-  become: True
 
-- name: Refreshing Packages
-  command: sudo zypper refresh
-  become: True
+# - name: Install git
+#   command: sudo zypper in -n -y git
+#   # when: Git is defined
 
-# - name: Try
-#   command: sudo zypper -n install nginx
-#   become: True
-
-# - zypper:
-#     name: nginx
-#     state: latest
-#   become: True
+- name: Install Mozilafirefox
+  command: sudo zypper install -n -y MozillaFirefox
+  # when: Mozillafirefox is defined
