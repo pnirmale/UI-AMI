@@ -1,0 +1,7 @@
+# - name: Install git
+#   command: sudo zypper in -n -y git
+#   # when: Git is defined
+
+- name: Install Mozilafirefox
+  command: sudo zypper install -n -y MozillaFirefox
+  # when: Mozillafirefox is defined

@@ -13,7 +13,7 @@ MIME_TYPE = 'text/javascript'
 def getAnsibleList():
 	return {
 		'windows' : ['Python3','NotepadPlusPlus','GoogleChrome'],
-		'unix' : ['MongoDB']
+		'unix' : ['GoogleChrome','Git','Python3']
 	}
 
 @app.route("/", methods=['GET','POST'])
@@ -160,7 +160,7 @@ def aws_post():
 
 	print(applyCommand,destroyCommand)
 
-	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand), mimetype= MIME_TYPE )
+	#return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand), mimetype= MIME_TYPE )
 
 @app.route("/azure",methods=['GET'])
 def azure():

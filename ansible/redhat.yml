@@ -1,0 +1,40 @@
+- name: Copy file with owner and permissions
+  copy:
+    src: mongo.txt
+    dest: /etc/yum.repos.d/mongodb-org-5.0.repo
+  become: yes
+  when: ansible_os_family == 'RedHat' and MongoDB is defined
+    
+- name: Install mongodb-org package
+  yum:
+    name: mongodb-org
+    state: present
+  become: yes
+  when: ansible_os_family == 'RedHat' and MongoDB is defined
+
+- name: Install wget
+  command: sudo yum install -y wget
+  become: True
+
+- name: Install Chrome
+  shell: |
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+    sudo yum install -y ./google-chrome-stable_current_*.rpm
+  become: True
+  when: GoogleChrome is defined
+
+- name : Install Python
+  command: sudo yum install -y python3
+  when : Python3 is defined
+
+
+- name: Install Ngnix
+  shell: |
+    sudo yum install -y epel-release
+    sudo yum install -y nginx
+  when: Ngnix is defined
+
+- name: Install git
+  command: sudo yum install -y git
+  when: Git is defined
+    
