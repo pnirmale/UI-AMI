@@ -7,6 +7,62 @@
     "version": "14393.4283.2103051830"
   },
   {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2019-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2012-R2-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2012-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2012-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2008-R2-SP1",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:latests",
+    "version": "latest"
+
+  },
+  {
+    "offer": "UbuntuServer",
+    "publisher": "Canonical",
+    "sku": "16.04-LTS",
+    "urn": "Canonical:UbuntuServer:16.04-LTS:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "UbuntuServer",
+    "publisher": "Canonical",
+    "sku": "18.04-LTS",
+    "urn": "Canonical:UbuntuServer:18.04-LTS:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "0001-com-ubuntu-server-focal",
+    "publisher": "Canonical",
+    "sku": "20_04-lts",
+    "urn": "Canonical:0001-com-ubuntu-server-focal:20_04-lts:20.04.202103250",
+    "version": "20.04.202103250"
+  },
+
+  {
     "offer": "CentOS",
     "publisher": "OpenLogic",
     "sku": "6.9",
