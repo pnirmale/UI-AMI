@@ -1,8 +1,13 @@
+- name: Install Python3
+  zypper:
+    name: python3
+    state: present
+  become: True
+  when: Python3 is defined
 
-# - name: Install git
-#   command: sudo zypper in -n -y git
-#   # when: Git is defined
-
-- name: Install Mozilafirefox
-  command: sudo zypper install -n -y MozillaFirefox
-  # when: Mozillafirefox is defined
+- name: Install Git
+  zypper:
+    name: git
+    state: present
+  become: True
+  when: Git is defined
