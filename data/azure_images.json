@@ -55,28 +55,6 @@
 
   },
   {
-    "offer": "0001-com-ubuntu-server-focal",
-    "publisher": "Canonical",
-    "sku": "20_04-lts",
-    "urn": "Canonical:0001-com-ubuntu-server-focal:20_04-lts:20.04.202103250",
-    "version": "20.04.202103250"
-  },
-
-  {
-    "offer": "CentOS",
-    "publisher": "OpenLogic",
-    "sku": "6.9",
-    "urn": "OpenLogic:CentOS:6.9:6.9.20210812",
-    "version": "6.9.20210812"
-  },
-  {
-    "offer": "CentOS",
-    "publisher": "OpenLogic",
-    "sku": "6.10",
-    "urn": "OpenLogic:CentOS:6.10:6.10.20181012",
-    "version": "6.10.20181012"
-  },
-  {
     "offer": "CentOS",
     "publisher": "OpenLogic",
     "sku": "7.2",
@@ -198,23 +176,6 @@
     "urn": "RedHat:RHEL:7.4:7.4.2021051701",
     "version": "7.4.2021051701"
   },
-
-  {
-    "offer": "RHEL",
-    "publisher": "RedHat",
-    "sku": "7.5",
-    "urn": "RedHat:RHEL:7.5:7.5.2021072201",
-    "version": "7.5.2021072201"
-  },
-
-  {
-    "offer": "RHEL",
-    "publisher": "RedHat",
-    "sku": "7.6",
-    "urn": "RedHat:RHEL:7.6:7.6.2021051101",
-    "version": "7.6.2021051101"
-  },
-
   {
     "offer": "RHEL",
     "publisher": "RedHat",
@@ -235,13 +196,6 @@
     "sku": "7_9",
     "urn": "RedHat:RHEL:7_9:7.9.202110089",
     "version": "7.9.202110089"
-  },
-  {
-    "offer": "RHEL",
-    "publisher": "RedHat",
-    "sku": "8",
-    "urn": "RedHat:RHEL:8:8.0.20191023",
-    "version": "8.0.20191023"
   },
   {
     "offer": "RHEL",
@@ -270,58 +224,5 @@
     "sku": "8_4",
     "urn": "RedHat:RHEL:8_4:8.4.2021091101",
     "version": "8.4.2021091101"
-  },
-  
-  {
-    "offer": "SLES-SAP-BYOS",
-    "publisher": "SUSE",
-    "sku": "12-SP3",
-    "urn": "SUSE:SLES-SAP-BYOS:12-SP3:2021.03.05",
-    "version": "2021.03.05"
-  },
-  {
-    "offer": "SLES-SAP-BYOS",
-    "publisher": "SUSE",
-    "sku": "12-sp4",
-    "urn": "SUSE:SLES-SAP-BYOS:12-sp4:2021.03.05",
-    "version": "2021.03.05"
-  },
-  {
-    "offer": "SLES-SAP-BYOS",
-    "publisher": "SUSE",
-    "sku": "12-sp4-gen2",
-    "urn": "SUSE:SLES-SAP-BYOS:12-sp4-gen2:2021.02.18",
-    "version": "2021.02.18"
-  },
-  {
-    "offer": "SLES-SAP-BYOS",
-    "publisher": "SUSE",
-    "sku": "15",
-    "urn": "SUSE:SLES-SAP-BYOS:15:2021.03.05",
-    "version": "2021.03.05"
-  },
-  {
-    "offer": "SLES-SAP-BYOS",
-    "publisher": "SUSE",
-    "sku": "15-gen2",
-    "urn": "SUSE:SLES-SAP-BYOS:15-gen2:2021.03.05",
-    "version": "2021.03.05"
-  },
-  {
-    "offer": "SLES-SAP-BYOS",
-    "publisher": "SUSE",
-    "sku": "gen2-12-sp4",
-    "urn": "SUSE:SLES-SAP-BYOS:gen2-12-sp4:2020.12.14",
-    "version": "2020.12.14"
-  },
-  {
-    "offer": "SLES-SAP-BYOS",
-    "publisher": "SUSE",
-    "sku": "gen2-15",
-    "urn": "SUSE:SLES-SAP-BYOS:gen2-15:2021.01.12",
-    "version": "2021.01.12"
   }
-
-
-
 ]

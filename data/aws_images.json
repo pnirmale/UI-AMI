@@ -20,20 +20,20 @@
     {
         "os_name" : "Ubuntu-16.04 LTS HVM",
         "ami_id" : "ami-05803413c51f242b7",
-        "user" : "ec2-user",
+        "user" : "ubuntu",
         "region" : "us-east-2"
     },
     {
         "os_name" : "Ubuntu-18.04 LTS HVM",
         "ami_id" : "ami-020db2c14939a8efb",
-        "user" : "ec2-user",
+        "user" : "ubuntu",
         "region" : "us-east-2"
 
     },
     {
         "os_name" : "Ubuntu-20.04 LTS",
         "ami_id" : "ami-0629230e074c580f2",
-        "user" : "ec2-user",
+        "user" : "ubuntu",
         "region" : "us-east-2"
 
     },
@@ -80,18 +80,6 @@
     {
         "os_name" : "Windows_Server-2012-R2_RTM-English-64Bit",
         "ami_id" : "ami-05a67d445b05c1e48",
-        "region" : "us-east-2"
-    },
-    {
-        "os_name" : "RHEL-8.5.0",
-        "ami_id" : "ami-0105142650df1b53d",
-        "user" : "ec2-user",
-        "region" : "us-east-2"
-    },
-    {
-        "os_name" : "RHEL-8.4.0",
-        "ami_id" : "ami-0ba62214afa52bec7",
-        "user" : "ec2-user",
         "region" : "us-east-2"
     },
     {
@@ -239,23 +227,9 @@
         "region" : "us-east-2"
     },
     {
-        "os_name" : "CentOS Stream 9 x86_64",
-        "ami_id" : "ami-0004ecc835dfd72e2",
-        "user" : "ec2-user",
-        "region" : "us-east-2"  
-    },
-    {
         "os_name" : "CentOS 8.2.2004 x86_64",
         "ami_id" : "ami-000e7ce4dd68e7a11",
         "user" : "ec2-user",
         "region" : "us-east-2"  
-    },
-    {
-        "os_name" : "centos-6.9",
-        "ami_id" : "ami-000102dbe3fd021c3",
-        "user" : "ec2-user",
-        "region" : "us-east-2"  
-
     }
-    
 ]
