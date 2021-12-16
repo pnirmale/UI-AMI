@@ -165,6 +165,7 @@ def aws_post():
 @app.route("/azure",methods=['GET'])
 def azure():
 	data = json.loads(open("data/azure_images.json").read())
+	regions = open("regions/azure.txt")
 
 	lines=[]
 	for i in data:
@@ -178,7 +179,7 @@ def azure():
 	except:
 		print("Please provide azure_credentials.json")
 		
-	return render_template("azure.html", title="Azure",opt=lines,credential=credentials,ansibleList = getAnsibleList())
+	return render_template("azure.html", title="Azure",opt=lines,credential=credentials,ansibleList = getAnsibleList(),regions=regions)
 
 @app.route("/azure", methods=['POST'])
 def azure_post():

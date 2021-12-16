@@ -77,6 +77,16 @@
                         </select>
                     </div> -->
                     <div class="form-group">
+                        <label for="os">Select Region </label>
+                        <select class="selectpicker" data-live-search="true" id="region" name="region">
+                            
+                            <option SELECTED data-tokens='0'>Choose Region</option>
+                            {% for x in regions %}
+                                <option data-tokens='{{ x }}' value='{{ x }}' >{{x}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="os">Select Required Image  </label>
                         <select class="selectpicker" data-live-search="true" id="ami" name="ami">
                             
