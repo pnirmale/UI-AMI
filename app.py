@@ -67,10 +67,10 @@ def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terrafo
 		os.chdir('..')
 
 def generateApplyCommand(terraform_command_variables_and_value,st="apply"):
-    str = "terraform " + st +" --auto-approve  -lock=false "
-    for key,value in terraform_command_variables_and_value.items():
-    	str += " -var "+key+"=\""+value+"\""	
-    return str
+	str = "terraform " + st +" --auto-approve  -lock=false "
+	for key,value in terraform_command_variables_and_value.items():
+		str += " -var "+key+"=\""+value+"\""	
+	return str
 
 def generateAnsibleCommand(list_of_vars):
 	cmd = "--extra-vars '"
