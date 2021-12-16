@@ -23,7 +23,8 @@ def view_home():
 @app.route("/aws")
 def aws():
 	lines = json.loads(open("data/aws_images.json").read())
-	return render_template("aws.html", title="Aws",opt=lines,ansibleList = getAnsibleList())   
+	regions = open("regions/aws.txt")
+	return render_template("aws.html", title="Aws",opt=lines,ansibleList = getAnsibleList(),regions=regions)   
 
 def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terraform_state_rm_proc,demo_proc,terraform_destroy_proc,applyCommand,remove_image_from_state_file_command,destroyCommand):
 		

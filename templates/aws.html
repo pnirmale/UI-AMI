@@ -83,6 +83,15 @@
                         </select>
                     </div>-->
                     <div class="form-group">
+                        <label for="os">Select Region  </label> <br/>
+                        <select class="selectpicker" data-live-search="true" id="region" name="region">
+                            <option SELECTED data-tokens='0'>Choose One</option>
+                            {% for x in regions %}
+                                <option data-tokens='{{ x }}' value='{{ x }}'>{{x}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="os">Select Required AMI  </label> <br/>
                         <select class="selectpicker" data-live-search="true" id="ami" name="ami">
                             <option SELECTED data-tokens='0'>Choose One</option>
