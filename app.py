@@ -251,11 +251,12 @@ def azure_post():
 
 @app.route("/gcp")
 def gcp():
+	regions = open('regions/gcp.txt')
 	with open("data/gcp_images.txt") as f:
 		lines=[]
 		for line in f.readlines():
 			lines.append(line[:-1])
-	return render_template("gcp.html",title="gcp",opt=lines,ansibleList = getAnsibleList())
+	return render_template("gcp.html",title="gcp",opt=lines,ansibleList = getAnsibleList(),regions=regions)
 
 @app.route("/gcp",methods=["POST"])
 def gcp_post():

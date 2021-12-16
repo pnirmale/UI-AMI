@@ -63,6 +63,15 @@
                         </select>
                     </div> -->
                     <div class="form-group">
+                        <label for="os">Select Region</label> <br/>
+                        <select class="selectpicker" data-live-search="true" id="region" name="region">
+                            <option SELECTED data-tokens='0'>Choose One</option> 
+                            {% for x in regions %}
+                                <option data-tokens='{{ x }}' value='{{ x }}'>{{x}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="projectname">Project Id which has compute engine and billing enabled</label>
                         <input required type="text" class="form-control" id="project" name="project" placeholder="Enter Project Name">
                     </div>
