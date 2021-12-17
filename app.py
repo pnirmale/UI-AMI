@@ -5,6 +5,7 @@ import json
 import re
 import flask
 from shelljob import proc
+import subprocess as sp
 
 app = Flask(__name__)
 
@@ -180,6 +181,21 @@ def azure():
 		print("Please provide azure_credentials.json")
 		
 	return render_template("azure.html", title="Azure",opt=lines,credential=credentials,ansibleList = getAnsibleList(),regions=regions)
+
+@app.route('/az_location',methods=['POST'])
+def az_location():
+	print("req received...",request.get_json())
+	region = request.get_json()['region']
+	vmname = request.get_json()['vmname']
+
+	print(region,vmname)
+
+	images_data = sp.getoutput('az vm image list --all --output json --location '+region+' --offer '+ vmname)
+	images_data = eval(images_data)
+	print(images_data)
+	
+	return {"data":images_data}
+
 
 @app.route("/azure", methods=['POST'])
 def azure_post():

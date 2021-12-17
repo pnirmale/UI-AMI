@@ -48,6 +48,23 @@
                 </div>
             </nav>
             <div class="jumbotron">
+                <div class="form-group">
+                    <label for="os">Select Region </label>
+                    <select class="selectpicker" data-live-search="true" id="region" name="region">
+                        
+                        <option SELECTED data-tokens='0'>Choose Region</option>
+                        {% for x in regions %}
+                            <option data-tokens='{{ x }}' value='{{ x }}' >{{x}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="os">Enter VM Name(Partial Name is Supported) </label>
+                    <input type="text" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" />
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
+                </div>
                 <form action="/azure" method="POST" enctype="multipart/form-data">
                     <!-- <div class="form-group">
                         <label for="vmname">Virtual Machine Name</label>
@@ -76,24 +93,12 @@
                             <option value="4">Suse</option>
                         </select>
                     </div> -->
-                    <div class="form-group">
-                        <label for="os">Select Region </label>
-                        <select class="selectpicker" data-live-search="true" id="region" name="region">
-                            
-                            <option SELECTED data-tokens='0'>Choose Region</option>
-                            {% for x in regions %}
-                                <option data-tokens='{{ x }}' value='{{ x }}' >{{x}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group" id='custom'>
                         <label for="os">Select Required Image  </label>
                         <select class="selectpicker" data-live-search="true" id="ami" name="ami">
                             
                             <option SELECTED data-tokens='0'>Choose available image</option>
-                            {% for x in opt %}
-                                <option data-tokens='{{ x }}' value='{{ x }}' >{{x.offer}}</option>
-                            {% endfor %}
+                            
                         </select>
                     </div>
                     <div id="ansibleList" name="ansibleList" class="form-group" data-list='{{ ansibleList }}'style="margin-top: 2rem;margin-bottom: 2rem;" >
@@ -121,8 +126,61 @@
             const x = document.getElementById('ami')
             const ansibleListDropdown = document.getElementById('ansibleList')
             const { windows,unix } = JSON.parse(ansibleListDropdown.dataset.list.replace(/'/gi,'"') )
+            const region = document.getElementById('region')
+            const vmname = document.getElementById('vmname')
 
-            x.addEventListener('change',()=>{
+            const fetchvm = document.getElementById('fetchvm')
+            fetchvm.onclick=()=>{
+                console.log('new ajax request initiated...',vmname.value)
+                $.ajax({
+                    type: "POST",
+                    url: "/az_location",
+                    data: JSON.stringify({ vmname: vmname.value , region: region.value.replace(/\n|\r/g,"")}),
+                    dataType: 'json',
+                    contentType: "application/json",
+                    success: function(result) {
+                        console.log("first ajax:");
+                        console.log(result);
+
+                        result.data.forEach(d=>{
+                            var option = document.createElement("option");
+                            option.text = d.offer;
+                            option.value = JSON.stringify(d);
+                            x.appendChild(option);
+
+                        })
+
+                        // let data = `<label for="os">Select  Image  </label>
+                        //     <select  id="ami" name="ami">
+                        //         <option>Choose  image</option>`
+                        
+                        // result.data.forEach(doc=> data += `<option value='${JSON.stringify(doc)}' >${doc.offer}</option> `)
+
+                        // data += `
+                        // </select>`
+
+                        // const d = document.getElementById('custom')
+                        // console.log(d.innerHTML)
+                        // d.innerHTML = data.toString();;
+                        // console.log(d.innerHTML)
+
+                        // result.data.forEach(doc=>{
+                        //     const k = document.createElement('OPTION')
+                        //     k.setAttribute('value',JSON.stringify(doc))
+                        //     const p = document.createTextNode(doc.offer)
+                        //     k.appendChild(k)
+                        //     x.appendChild(k)
+                        // })
+
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                        console.log("Status: " + textStatus,errorThrown); 
+                    } 
+                })
+            }
+
+            document.getElementById('ami').addEventListener('change',()=>{
+                console.log('asdf')
                 content ="<h6>Choose softwares to install from following </h6>"
                 let k = JSON.parse(x.value.replace(/'/gi,'"'))
                 if(k.urn.toLowerCase().includes('windows')){
