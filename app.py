@@ -6,10 +6,28 @@ import re
 import flask
 from shelljob import proc
 import subprocess as sp
+import boto3
 
 app = Flask(__name__)
 
 MIME_TYPE = 'text/javascript'
+
+awsDefaultUsers = {
+	'centos' : 'ec2-user',
+	'debian' : 'admin',
+	'fedora' : 'fedora',
+	'rhel' : 'ec2-user',
+	'suse' : 'ec2-user',
+	'ubuntu' : 'ubuntu',
+	'oracle' : 'ec2-user',
+	'bitnami' : 'bitnami'
+}
+
+def getAwsDefaultUser(os_name):
+	for key, value in awsDefaultUsers.items():
+		if re.search(key,os_name,re.IGNORECASE):
+			return value
+	return None
 
 def getAnsibleList():
 	return {
@@ -92,13 +110,15 @@ def aws_post():
 		print('a')
 		
 	input_data = eval(request.form.getlist('ami')[0])
-	region = input_data.get("region")
+	region = request.form.getlist('region')[0]
 
 	if re.search("windows",input_data["os_name"],re.IGNORECASE):
 		directory = "aws-win"
 	
 	terraform_command_variables_and_value={}
 	terraform_command_variables_and_value['ansible_command'] = generateAnsibleCommand(list_softwares) 
+	terraform_command_variables_and_value['user'] = getAwsDefaultUser(input_data['os_name'])
+
 	for key,v in input_data.items():
 		if key == 'os_name':
 			continue
@@ -182,21 +202,41 @@ def azure():
 		
 	return render_template("azure.html", title="Azure",opt=lines,credential=credentials,ansibleList = getAnsibleList(),regions=regions)
 
-@app.route('/az_location',methods=['POST'])
-def az_location():
+@app.route('/location',methods=['POST'])
+def location():
 	print("req received...",request.get_json())
-	region = request.get_json()['region']
-	vmname = request.get_json()['vmname']
+	region = request.form.getlist('region')[0].rstrip()
+	vmname = request.form.getlist('vmname')[0].rstrip()
+	vmname = vmname.replace(' ','*')
+	vmname = vmname + '*'
 
 	print(region,vmname)
+	ec2_client = boto3.client('ec2', region_name=region)
 
-	images_data = sp.getoutput('az vm image list --all --output json --location '+region+' --offer '+ vmname)
-	images_data = eval(images_data)
-	print(images_data)
+	images = ec2_client.describe_images(Filters=[
+        {
+            'Name': 'name',
+            'Values': [
+                vmname
+            ]
+        },
+    ])
+
+	finalData = []
+	print(len(images['Images']))
+
+	for ami in images['Images']:
+		print(ami,type(ami))
+		currentData = {
+			'ami_id' : ami['ImageId'],
+			'os_name' : ami['Name']
+		}
+		finalData.append(currentData)
+
+	regions = open("regions/aws.txt")
+	return render_template("aws.html", title="Aws",ansibleList = getAnsibleList(),regions=regions,selectedRegion=region,vmname=vmname,opt=finalData)   
+
 	
-	return {"data":images_data}
-
-
 @app.route("/azure", methods=['POST'])
 def azure_post():
 	directory = 'azure'
