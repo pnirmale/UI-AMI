@@ -7,6 +7,8 @@ import flask
 from shelljob import proc
 import subprocess as sp
 import boto3
+from azure.mgmt.compute import ComputeManagementClient
+from azure.identity import ClientSecretCredential
 
 app = Flask(__name__)
 
@@ -236,7 +238,34 @@ def location():
 	regions = open("regions/aws.txt")
 	return render_template("aws.html", title="Aws",ansibleList = getAnsibleList(),regions=regions,selectedRegion=region,vmname=vmname,opt=finalData)   
 
-	
+
+@app.route('/az_location',methods=['POST'])
+def az_location():
+	print("req received...")
+	region = request.form.getlist('region')[0].rstrip()
+	vmname = request.form.getlist('vmname')[0].rstrip()
+
+	images = sp.getoutput('az vm image list --all --output json --location '+region+' --offer '+vmname)
+	images = eval(images)
+
+	print(len(images))
+	for a in images:
+		print(a)
+		break
+
+	data = json.loads(open("data/azure_images.json").read())
+	regions = open("regions/azure.txt")
+
+	credentials=[]
+	try:
+		data2 = json.loads(open("data/azure_credentials.json").read())
+		for i in data2['azure_credentials']:
+			credentials.append(i['client_id'])
+	except:
+		print("Please provide azure_credentials.json")
+		
+	return render_template("azure.html", title="Azure",selectedRegion=region,vmname=vmname,opt=images,credential=credentials,ansibleList = getAnsibleList(),regions=regions)
+
 @app.route("/azure", methods=['POST'])
 def azure_post():
 	directory = 'azure'

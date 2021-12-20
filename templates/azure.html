@@ -48,57 +48,44 @@
                 </div>
             </nav>
             <div class="jumbotron">
-                <div class="form-group">
-                    <label for="os">Select Region </label>
-                    <select class="selectpicker" data-live-search="true" id="region" name="region">
-                        
-                        <option SELECTED data-tokens='0'>Choose Region</option>
-                        {% for x in regions %}
-                            <option data-tokens='{{ x }}' value='{{ x }}' >{{x}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="os">Enter VM Name(Partial Name is Supported) </label>
-                    <input type="text" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" />
-                </div>
-                <div class="form-group">
-                    <button type="button" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
-                </div>
-                <form action="/azure" method="POST" enctype="multipart/form-data">
-                    <!-- <div class="form-group">
-                        <label for="vmname">Virtual Machine Name</label>
-                        <input  type="text" class="form-control" id="vmname" name="vmname" placeholder="Enter Virtual Machine Name">
-                    </div>
+                <form action='/az_location' method='POST'> 
                     <div class="form-group">
-                        <label for="user">User name for instance</label>
-                        <input type="text" class="form-control" id="user" name="user" placeholder="Username for given Instance">
-                    </div>
-                    <div class="form-group">
-                        <label for="Password">Password</label>
-                        <input type="Password" class="form-control" id="Password" name="Password" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="region">Instance region</label>
-                        <input  type="text" class="form-control" id="region" name="region" placeholder="region">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="os">Choose Operating System</label>
-                        <select class="custom-select mr-sm-2" id="os" name="os">
-                            <option selected>Choose Operating System</option>
-                            <option value="1">Window</option>
-                            <option value="2">ubuntu-Linux</option>
-                            <option value="3">Centos</option>
-                            <option value="4">Suse</option>
+                        <label for="os">Select Region </label>
+                        <select class="selectpicker" data-live-search="true" id="region" name="region">
+                            {% if selectedRegion %}
+                                <option SELECTED data-tokens='{{ selectedRegion}}'>{{ selectedRegion }}</option>
+                            {% else %}
+                                <option SELECTED data-tokens='0'>Choose Region</option>
+                            {% endif %}
+
+                            {% for x in regions %}
+                                <option data-tokens='{{ x }}' value='{{ x }}' >{{ x }} </option>
+                            {% endfor %}
                         </select>
-                    </div> -->
+                    </div>
+                    <div class="form-group">
+                        <label for="os">Enter VM Name(Partial Name is Supported) </label>
+                         {% if vmname %}
+                        <input type="text" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" value = '{{  vmname }}' />
+                        {% else %}
+                        <input type="text" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" />
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
+                    </div>
+                </form>
+                
+                <form action="/azure" method="POST" enctype="multipart/form-data">
+                    
                     <div class="form-group" id='custom'>
                         <label for="os">Select Required Image  </label>
                         <select class="selectpicker" data-live-search="true" id="ami" name="ami">
                             
                             <option SELECTED data-tokens='0'>Choose available image</option>
-                            
+                            {% for x in opt %}
+                                <option data-tokens='{{ x }}' value='{{ x }}'>offer-{{x.offer ~ ' publisher- ' ~ x.publisher}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div id="ansibleList" name="ansibleList" class="form-group" data-list='{{ ansibleList }}'style="margin-top: 2rem;margin-bottom: 2rem;" >
@@ -113,7 +100,10 @@
                         </select>
                         
                     </div>
-                    
+                    {% if selectedRegion %}
+                        <input type="hidden"  name="region" value="{{ selectedRegion }}"> 
+                    {% endif %}
+
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
@@ -129,57 +119,7 @@
             const region = document.getElementById('region')
             const vmname = document.getElementById('vmname')
 
-            const fetchvm = document.getElementById('fetchvm')
-            fetchvm.onclick=()=>{
-                console.log('new ajax request initiated...',vmname.value)
-                $.ajax({
-                    type: "POST",
-                    url: "/az_location",
-                    data: JSON.stringify({ vmname: vmname.value , region: region.value.replace(/\n|\r/g,"")}),
-                    dataType: 'json',
-                    contentType: "application/json",
-                    success: function(result) {
-                        console.log("first ajax:");
-                        console.log(result);
-
-                        result.data.forEach(d=>{
-                            var option = document.createElement("option");
-                            option.text = d.offer;
-                            option.value = JSON.stringify(d);
-                            x.appendChild(option);
-
-                        })
-
-                        // let data = `<label for="os">Select  Image  </label>
-                        //     <select  id="ami" name="ami">
-                        //         <option>Choose  image</option>`
-                        
-                        // result.data.forEach(doc=> data += `<option value='${JSON.stringify(doc)}' >${doc.offer}</option> `)
-
-                        // data += `
-                        // </select>`
-
-                        // const d = document.getElementById('custom')
-                        // console.log(d.innerHTML)
-                        // d.innerHTML = data.toString();;
-                        // console.log(d.innerHTML)
-
-                        // result.data.forEach(doc=>{
-                        //     const k = document.createElement('OPTION')
-                        //     k.setAttribute('value',JSON.stringify(doc))
-                        //     const p = document.createTextNode(doc.offer)
-                        //     k.appendChild(k)
-                        //     x.appendChild(k)
-                        // })
-
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                        console.log("Status: " + textStatus,errorThrown); 
-                    } 
-                })
-            }
-
-            document.getElementById('ami').addEventListener('change',()=>{
+            x.addEventListener('change',()=>{
                 console.log('asdf')
                 content ="<h6>Choose softwares to install from following </h6>"
                 let k = JSON.parse(x.value.replace(/'/gi,'"'))
