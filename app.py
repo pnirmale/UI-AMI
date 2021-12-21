@@ -6,9 +6,6 @@ import re
 import flask
 from shelljob import proc
 import subprocess as sp
-import boto3
-from azure.mgmt.compute import ComputeManagementClient
-from azure.identity import ClientSecretCredential
 
 app = Flask(__name__)
 
@@ -215,23 +212,17 @@ def location():
 	print(region,vmname)
 	ec2_client = boto3.client('ec2', region_name=region)
 
-	images = ec2_client.describe_images(Filters=[
-        {
-            'Name': 'name',
-            'Values': [
-                vmname
-            ]
-        },
-    ])
+	images = sp.getoutput('aws ec2 describe-images --region '+ region +' --filters "Name=name,Values='+ vmname +'"')
+	images = json.loads(images)
 
 	finalData = []
-	print(len(images['Images']))
+	print(type(images))
 
 	for ami in images['Images']:
 		print(ami,type(ami))
 		currentData = {
 			'ami_id' : ami['ImageId'],
-			'os_name' : ami['Name']
+			'os_name' : ami['Name'] + ' PlatFormDetails : ' + ami['PlatformDetails']
 		}
 		finalData.append(currentData)
 
