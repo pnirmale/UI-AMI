@@ -66,9 +66,9 @@
                     <div class="form-group">
                         <label for="os">Enter VM Name(Partial Name is Supported) </label>
                          {% if vmname %}
-                        <input type="text" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" value = '{{  vmname }}' />
+                        <input type="text" style="width: 30%;" class="form-control" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" value = '{{  vmname }}' />
                         {% else %}
-                        <input type="text" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" />
+                        <input type="text" style="width: 30%;" class="form-control" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" />
                         {% endif %}
                     </div>
                     <div class="form-group">
