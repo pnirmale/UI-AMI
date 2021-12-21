@@ -49,19 +49,28 @@
                 </div>
             </nav>
             <div class="jumbotron">
+                {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ error }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endif %}
+                <form method="POST" action="/gcp_location">
+                    <div class="form-group">
+                        <label for="projectToSearch">Enter Project to search marketplace images(if you leave blank then we will find only standard images)</label>
+                        {% if selectedProject %}
+                            <input type="text" class="form-control" id="projectToSearch" name="projectToSearch" value='{{ selectedProject }}' placeholder="Specify Project Name">
+                        {% else %}
+                            <input type="text" class="form-control" id="projectToSearch" name="projectToSearch"  placeholder="Specify PRoject Name">
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
+                    </div>
+                </form>
                 <form action="/gcp" method="POST" enctype="multipart/form-data">
-                   <!-- 
-                    
-                     <div class="form-group">
-                        <label for="os">Choose Operating System</label>
-                        <select class="custom-select mr-sm-2" id="os" name="os">
-                            <option selected>Choose Operating System</option>
-                            <option value="1">Window</option>
-                            <option value="2">ubuntu-Linux</option>
-                            <option value="3">Centos</option>
-                            <option value="4">Suse</option>
-                        </select>
-                    </div> -->
                     <div class="form-group">
                         <label for="os">Select Region</label> <br/>
                         <select class="selectpicker" data-live-search="true" id="region" name="region">

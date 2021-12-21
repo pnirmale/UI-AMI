@@ -337,11 +337,38 @@ def azure_post():
 @app.route("/gcp")
 def gcp():
 	regions = open('regions/gcp.txt')
-	with open("data/gcp_images.txt") as f:
-		lines=[]
-		for line in f.readlines():
-			lines.append(line[:-1])
-	return render_template("gcp.html",title="gcp",opt=lines,ansibleList = getAnsibleList(),regions=regions)
+	standardVms = sp.getoutput('gcloud compute images list --format="json"')
+	standardVms = eval(standardVms)
+
+	finalData = []
+	for image in standardVms:
+		txt = image['selfLink']
+		finalData.append(txt[txt.index("projects/") + 9:txt.index("/", txt.index("projects/") + 9 )] + txt[txt.rfind("/"):len(txt)])
+
+	return render_template("gcp.html",title="gcp",opt=finalData,ansibleList = getAnsibleList(),regions=regions)
+
+@app.route("/gcp_location",methods=['POST'])
+def gcp_location():
+	error = None
+	finalData = []
+
+	regions = open('regions/gcp.txt')
+	project = request.form.getlist('projectToSearch')[0]
+
+	vms = sp.getoutput('gcloud compute images list --project="'+project+'" --format="json"')
+
+	try:
+		vms = eval(vms)
+	except:
+		error = "The resource 'projects/" + project+ " was not found"
+
+	if error is None:
+		for image in vms:
+			txt = image['selfLink']
+			finalData.append(txt[txt.index("projects/") + 9:txt.index("/", txt.index("projects/") + 9 )] + txt[txt.rfind("/"):len(txt)])
+
+	return render_template("gcp.html",title="gcp",error=error,selectedProject=project,opt=finalData,ansibleList = getAnsibleList(),regions=regions)
+
 
 @app.route("/gcp",methods=["POST"])
 def gcp_post():
