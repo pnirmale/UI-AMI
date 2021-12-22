@@ -210,7 +210,6 @@ def location():
 	vmname = vmname + '*'
 
 	print(region,vmname)
-	ec2_client = boto3.client('ec2', region_name=region)
 
 	images = sp.getoutput('aws ec2 describe-images --region '+ region +' --filters "Name=name,Values='+ vmname +'"')
 	images = json.loads(images)
