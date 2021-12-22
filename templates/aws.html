@@ -47,7 +47,15 @@
                 </div>
             </nav>
             <div class="jumbotron">
-                <form action='/location' method='POST'> 
+                {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ error }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endif %}
+                <form action='/location' method='POST' enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="os">Select Region </label>
                         <select class="selectpicker" data-live-search="true" id="region" name="region">
@@ -64,19 +72,28 @@
                     <div class="form-group">
                         <label for="os">Enter VM Name(Partial Name is Supported) </label>
                         {% if vmname %}
-                        <!-- <input type="text" class="form-control" id="projectToSearch" name="projectToSearch"  placeholder="Specify PRoject Name"> -->
-
-                        <input type="text" style="width: 30%;" class="form-control" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" value = '{{  vmname }}' />
+                            <input type="text" style="width: 30%;" class="form-control" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" value = '{{  vmname }}' />
                         {% else %}
-                        <input type="text" class="form-control" style="width: 30%;"  name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" />
+                            <input type="text" class="form-control" style="width: 30%;"  name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" />
                         {% endif %}
                         
                     </div>
                     <div class="form-group">
+                        <label for="file">Choose aws Creadiantial file</label>
+                        <input type="file" class="form-control-file" id="file" name="file">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Check if you have configured already (No need to select configuration file if you have configured locally)
+                        </label>
+                    </div> <br/>
+                    <div class="form-group">
                         <button type="submit" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
                     </div>
                 </form>
-                <form action="/aws" method="POST" enctype="multipart/form-data">
+
+                <form action="/aws" method="POST" >
                 
                     <div class="form-group">
                         <label for="os">Select Required AMI  </label> <br/>
@@ -95,16 +112,7 @@
                         <h6>Choose Operating System from above to get list of available softwares </h6> 
                     </div>
                    
-                    <div class="form-group">
-                        <label for="file">Choose aws Creadiantial file</label>
-                        <input type="file" class="form-control-file" id="file" name="file">
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                          Check if you have configured already (No need to select configuration file if you have configured locally)
-                        </label>
-                    </div> <br/>
+                    <input type='hidden' name='alreadyConfigured' value="{{ alreadyConfigured }}" />
                     <input type="hidden"  name="region" value="{{ selectedRegion }}"> 
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

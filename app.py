@@ -44,7 +44,7 @@ def aws():
 	regions = open("regions/aws.txt")
 	return render_template("aws.html", title="Aws",opt=lines,ansibleList = getAnsibleList(),regions=regions)   
 
-def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terraform_state_rm_proc,demo_proc,terraform_destroy_proc,applyCommand,remove_image_from_state_file_command,destroyCommand):
+def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terraform_state_rm_proc,demo_proc,terraform_destroy_proc,applyCommand,remove_image_from_state_file_command,destroyCommand,alreadyConfigured=False):
 		
 		os.chdir(directory)
 		initialize_proc.run('terraform init')
@@ -82,6 +82,10 @@ def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terrafo
 			lines = terraform_destroy_proc.readlines()
 			for proc, line in lines:
 				yield line
+
+		if re.search("aws",directory,re.IGNORECASE) and alreadyConfigured:
+			del os.environ['AWS_ACCESS_KEY_ID']
+			del os.environ['AWS_SECRET_ACCESS_KEY']
 				
 		os.chdir('..')
 
@@ -102,14 +106,17 @@ def aws_post():
 	directory = "aws"
 
 	list_softwares = json.loads(json.dumps(request.form))
+	alreadyConfigured = request.form.getlist('alreadyConfigured')[0]
+
 	try:
 		list_softwares.pop('ami')
-		list_softwares.pop('AlreadyConfigured')
 	except:
 		print('a')
 		
 	input_data = eval(request.form.getlist('ami')[0])
 	region = request.form.getlist('region')[0]
+
+	print(region)
 
 	if re.search("windows",input_data["os_name"],re.IGNORECASE):
 		directory = "aws-win"
@@ -117,62 +124,12 @@ def aws_post():
 	terraform_command_variables_and_value={}
 	terraform_command_variables_and_value['ansible_command'] = generateAnsibleCommand(list_softwares) 
 	terraform_command_variables_and_value['user'] = getAwsDefaultUser(input_data['os_name'])
+	terraform_command_variables_and_value['region'] = region
 
 	for key,v in input_data.items():
 		if key == 'os_name':
 			continue
 		terraform_command_variables_and_value[key] = v
-
-	# configures providers.tf	
-	if len(request.form.getlist("AlreadyConfigured")) == 0:
-		file = request.files['file']
-		filename = secure_filename(file.filename) 
-		file.save(filename)
-
-		lines =[]
-		with open(filename) as f:
-			lines = f.readlines()
-
-		access_key=None 
-		secret_key=None
-
-		for line in lines:
-			tmp = line.replace(' ','')[:-1]
-			if re.search("access",line,re.IGNORECASE) and re.search("key",line,re.IGNORECASE) and re.search("secret",line,re.IGNORECASE) == None:
-				result = tmp.find('=')
-				access_key=tmp[result+1:]
-			if re.search("key",line,re.IGNORECASE) and re.search("secret",line,re.IGNORECASE):
-				result = tmp.find('=')
-				secret_key=tmp[result+1:]
-
-		if access_key == None or secret_key == None:
-			print("Unable to configure aws keys")
-			return render_template("aws.html",title="Aws")
-		
-		content = '''
-			provider "aws" {{
-				access_key = "{access_key}"
-				secret_key = "{secret_key}"
-				region = "{region}"
-			}}
-		'''
-		os.chdir(directory)
-		provider_file = open("providers.tf", "w")
-		provider_file.write(content.format(access_key=access_key,secret_key=secret_key,region=region))
-		provider_file.close()
-		os.chdir("..")
-		os.remove(filename)
-	else:
-		content = '''
-			provider "aws" {{
-				region = "{region}"
-			}}
-		'''
-		os.chdir(directory)
-		provider_file = open("providers.tf", "w")
-		provider_file.write(content.format(region=region))
-		provider_file.close()
-		os.chdir("..")
 
 	applyCommand=generateApplyCommand(terraform_command_variables_and_value)
 	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
@@ -180,7 +137,7 @@ def aws_post():
 
 	print(applyCommand,destroyCommand)
 
-	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand), mimetype= MIME_TYPE )
+	return flask.Response( show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand,alreadyConfigured), mimetype= MIME_TYPE )
 
 @app.route("/azure",methods=['GET'])
 def azure():
@@ -203,7 +160,11 @@ def azure():
 
 @app.route('/location',methods=['POST'])
 def location():
-	print("req received...",request.get_json())
+	print("req received...")
+	regions = open("regions/aws.txt")
+	
+	alreadyConfigured = len(request.form.getlist('AlreadyConfigured'))
+
 	region = request.form.getlist('region')[0].rstrip()
 	vmname = request.form.getlist('vmname')[0].rstrip()
 	vmname = vmname.replace(' ','*')
@@ -211,22 +172,55 @@ def location():
 
 	print(region,vmname)
 
+	# configures AWS Keys to ENV variables	
+	if alreadyConfigured == 0:
+		file = request.files['file']
+		filename = secure_filename(file.filename) 
+		file.save(filename)
+
+		lines =[]
+		with open(filename) as f:
+			lines = f.readlines()
+
+		access_key = None 
+		secret_key = None
+
+		for line in lines:
+			tmp = line.replace(' ','')[:-1]
+			if re.search("access",line,re.IGNORECASE) and re.search("key",line,re.IGNORECASE) and re.search("secret",line,re.IGNORECASE) == None:
+				result = tmp.find('=')
+				access_key=tmp[result+1:]
+			if re.search("key",line,re.IGNORECASE) and re.search("secret",line,re.IGNORECASE):
+				result = tmp.find('=')
+				secret_key=tmp[result+1:]
+
+		if access_key == None or secret_key == None:
+			return render_template("aws.html",error='Unable to configure aws keys', title="Aws",ansibleList = getAnsibleList(),regions=regions,selectedRegion=region,vmname=vmname) 
+
+		os.environ["AWS_ACCESS_KEY_ID"] = access_key
+		os.environ["AWS_SECRET_ACCESS_KEY"] = secret_key
+
+		os.remove(filename)
+
 	images = sp.getoutput('aws ec2 describe-images --region '+ region +' --filters "Name=name,Values='+ vmname +'"')
-	images = json.loads(images)
+
+	try:
+		images  = json.loads(images)
+	except:
+		file1 = open("logs.txt",'w')
+		file1.write(images)
+		file1.close()
+		return render_template("aws.html",error='Error Occured while fetching AMI\'s ...Please check logs.txt file for error details', title="Aws",ansibleList = getAnsibleList(),regions=regions,selectedRegion=region,vmname=vmname)   
 
 	finalData = []
-	print(type(images))
 
 	for ami in images['Images']:
-		print(ami,type(ami))
-		currentData = {
+		finalData.append({
 			'ami_id' : ami['ImageId'],
 			'os_name' : ami['Name'] + ' PlatFormDetails : ' + ami['PlatformDetails']
-		}
-		finalData.append(currentData)
+		})
 
-	regions = open("regions/aws.txt")
-	return render_template("aws.html", title="Aws",ansibleList = getAnsibleList(),regions=regions,selectedRegion=region,vmname=vmname,opt=finalData)   
+	return render_template("aws.html", title="Aws",ansibleList = getAnsibleList(),regions=regions,selectedRegion=region,vmname=vmname,opt=finalData,alreadyConfigured=alreadyConfigured)   
 
 
 @app.route('/az_location',methods=['POST'])
