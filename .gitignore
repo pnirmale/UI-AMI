@@ -1,7 +1,9 @@
 __py*
 */.terraform*
 */terraform*
-*/providers.tf
+azure/providers.tf
+azure-win/providers.tf
+gcp/providers.tf
 data/azure_credentials.json
 .env
 .DS_Store 
