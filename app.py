@@ -86,6 +86,12 @@ def show_real_time_output(directory,initialize_proc,terraform_apply_proc,terrafo
 		if re.search("aws",directory,re.IGNORECASE) and alreadyConfigured:
 			del os.environ['AWS_ACCESS_KEY_ID']
 			del os.environ['AWS_SECRET_ACCESS_KEY']
+
+		if re.search("azure",directory,re.IGNORECASE):
+			del os.environ['ARM_CLIENT_ID']
+			del os.environ['ARM_CLIENT_SECRET']
+			del os.environ['ARM_TENANT_ID']
+			del os.environ['ARM_SUBSCRIPTION_ID']
 				
 		os.chdir('..')
 
@@ -226,29 +232,51 @@ def location():
 @app.route('/az_location',methods=['POST'])
 def az_location():
 	print("req received...")
-	region = request.form.getlist('region')[0].rstrip()
-	vmname = request.form.getlist('vmname')[0].rstrip()
-
-	images = sp.getoutput('az vm image list --all --output json --location '+region+' --offer '+vmname)
-	images = eval(images)
-
-	print(len(images))
-	for a in images:
-		print(a)
-		break
-
-	data = json.loads(open("data/azure_images.json").read())
 	regions = open("regions/azure.txt")
 
+	region = request.form.getlist('region')[0].rstrip()
+	vmname = request.form.getlist('vmname')[0].rstrip()
+	cred=request.form['cred']
+
+	client_id = None
+	client_secret = None
+	tenant_id = None
+	subscription_id = None
+
 	credentials=[]
+
 	try:
 		data2 = json.loads(open("data/azure_credentials.json").read())
 		for i in data2['azure_credentials']:
+			if cred==i['client_id']:
+				client_id = i['client_id'].replace(' ','')
+				client_secret = i['client_secret'].replace(' ','')
+				tenant_id = i['tenant_id'].replace(' ','')
+				subscription_id = i['subscription_id'].replace(' ','')
+			
 			credentials.append(i['client_id'])
+
+		if client_id == None or client_secret == None or tenant_id == None:
+			return render_template("azure.html",error="unable to locate credentials")
+
+
+		os.environ['ARM_CLIENT_ID'] = client_id
+		os.environ['ARM_CLIENT_SECRET'] = client_secret
+		os.environ['ARM_TENANT_ID'] = tenant_id
+		os.environ['ARM_SUBSCRIPTION_ID'] = subscription_id
+
+		images = sp.getoutput('az vm image list --all --output json --location '+region+' --offer '+vmname)
+		images = eval(images)
+
+		print(len(images))
+		for a in images:
+			print(a)
+			break
+		
+		return render_template("azure.html", title="Azure",selectedRegion=region,vmname=vmname,opt=images,credential=credentials,ansibleList = getAnsibleList(),regions=regions,selectedClientId=client_id)
 	except:
 		print("Please provide azure_credentials.json")
-		
-	return render_template("azure.html", title="Azure",selectedRegion=region,vmname=vmname,opt=images,credential=credentials,ansibleList = getAnsibleList(),regions=regions)
+		return render_template('error.html')
 
 @app.route("/azure", methods=['POST'])
 def azure_post():
@@ -257,7 +285,6 @@ def azure_post():
 	list_softwares = json.loads(json.dumps(request.form))
 	try:
 		list_softwares.pop('ami')
-		list_softwares.pop('cred')
 	except:
 		print('a')
 
@@ -265,7 +292,6 @@ def azure_post():
 	terraform_command_variables_and_value['ansible_command'] = generateAnsibleCommand(list_softwares) 
 
 	ami=eval(request.form.getlist('ami')[0])['urn']
-	cred=request.form['cred']
 
 	if re.search('windows',ami,re.IGNORECASE):
 		directory = 'azure-win'
@@ -277,46 +303,13 @@ def azure_post():
 	terraform_command_variables_and_value['sku'] = urn_list[2]
 	terraform_command_variables_and_value['image_version'] = urn_list[3]
 	
-	try:
-		data2 = json.loads(open("data/azure_credentials.json").read())
-		for i in data2['azure_credentials']:
-			if cred==i['client_id']:
+	applyCommand=generateApplyCommand(terraform_command_variables_and_value)
+	destroyCommand=generateApplyCommand(terraform_command_variables_and_value,"destroy")
+	remove_image_from_state_file_command = 'terraform state rm "azurerm_image.my-image"'
+	print(applyCommand,destroyCommand)
 
-				subscription_id = i['subscription_id'].replace(' ','')
-				client_id = i['client_id'].replace(' ','')
-				client_secret = i['client_secret'].replace(' ','')
-				tenant_id = i['tenant_id'].replace(' ','')
-
-				terraform_command_variables_and_value['client_id'] = client_id
-				terraform_command_variables_and_value['client_secret'] = client_secret
-				terraform_command_variables_and_value['tenant_id'] = tenant_id
-
-				content = '''
-					provider "azurerm" {{
-						features {{}}
-						subscription_id   =  "{subscription_id}"
-						client_id         =  "{client_id}"
-						client_secret     =  "{client_secret}"
-						tenant_id         =  "{tenant_id}"
-					}}
-				'''
-				str = content.format(subscription_id =subscription_id,tenant_id=tenant_id,client_id =client_id,client_secret=client_secret)
-
-				os.chdir(directory)
-				provider_file = open('providers.tf','w')
-				provider_file.write(str)
-				provider_file.close()
-				os.chdir('..')
-			
-		applyCommand=generateApplyCommand(terraform_command_variables_and_value)
-		destroyCommand=generateApplyCommand(terraform_command_variables_and_value,"destroy")
-		remove_image_from_state_file_command = 'terraform state rm "azurerm_image.my-image"'
-		print(applyCommand,destroyCommand)
-
-		return flask.Response(show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand), mimetype= MIME_TYPE )
-	except:
-		print("Please provide azure_credentials.json")
-		return render_template('error.html')
+	return flask.Response(show_real_time_output(directory,proc.Group(),proc.Group(),proc.Group(),proc.Group(),proc.Group(),applyCommand,remove_image_from_state_file_command,destroyCommand), mimetype= MIME_TYPE )
+	
 
 @app.route("/gcp")
 def gcp():
