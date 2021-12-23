@@ -109,10 +109,6 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 
   provisioner "local-exec" {
-    command = "az login --service-principal -u ${var.client_id} --password ${var.client_secret} --tenant ${var.tenant_id}"  
-  }
-
-  provisioner "local-exec" {
     command = "az vm deallocate --resource-group ${azurerm_resource_group.main.name} --name ${azurerm_linux_virtual_machine.main.name}"
   }
 

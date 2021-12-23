@@ -186,10 +186,6 @@ resource "azurerm_virtual_machine" "main" {
     command = "rm -rf hosts"
   }
 
-  provisioner "local-exec" {
-    command = "az login --service-principal -u ${var.client_id} --password ${var.client_secret} --tenant ${var.tenant_id}"  
-  }
-
   provisioner "remote-exec" {
     connection {
       host     = "${azurerm_public_ip.main.ip_address}"
