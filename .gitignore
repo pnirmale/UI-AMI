@@ -1,8 +1,6 @@
 __py*
 */.terraform*
 */terraform*
-azure/providers.tf
-azure-win/providers.tf
 gcp/providers.tf
 data/azure_credentials.json
 .env
