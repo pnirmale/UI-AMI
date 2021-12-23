@@ -1,7 +1,3 @@
-variable "tenant_id" {}
-variable "client_id" {}
-variable "client_secret" {}
-
 variable public_key_location {
     description = "Specify location for your public key generated via (ssh-keygen)"
     default = "~/.ssh/id_rsa.pub"

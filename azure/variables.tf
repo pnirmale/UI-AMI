@@ -1,13 +1,3 @@
-variable "tenant_id" {
-    default = "ab77d0b8-ab42-469a-ace5-7a30504a0538"
-}
-variable "client_id" {
-    default = "naraharipapshetwar@gmail.com"
-}
-variable "client_secret" {
-    default = "Hari@2018BTECS00012"
-}
-
 variable public_key_location {
     description = "Specify location for your public key generated via (ssh-keygen)"
     default = "~/.ssh/id_rsa.pub"
