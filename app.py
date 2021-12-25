@@ -313,26 +313,68 @@ def azure_post():
 
 @app.route("/gcp")
 def gcp():
-	regions = open('regions/gcp.txt')
-	standardVms = sp.getoutput('gcloud compute images list --format="json"')
-	standardVms = eval(standardVms)
-
-	finalData = []
-	for image in standardVms:
-		txt = image['selfLink']
-		finalData.append(txt[txt.index("projects/") + 9:txt.index("/", txt.index("projects/") + 9 )] + txt[txt.rfind("/"):len(txt)])
-
-	return render_template("gcp.html",title="gcp",opt=finalData,ansibleList = getAnsibleList(),regions=regions)
+	regions = open('regions/gcp.txt')	
+	return render_template("gcp.html",title="gcp",ansibleList = getAnsibleList(),regions=regions)
 
 @app.route("/gcp_location",methods=['POST'])
 def gcp_location():
+	directory = 'gcp'
 	error = None
 	finalData = []
 
 	regions = open('regions/gcp.txt')
-	project = request.form.getlist('projectToSearch')[0]
 
-	vms = sp.getoutput('gcloud compute images list --project="'+project+'" --format="json"')
+	project = request.form.getlist('projectToSearch')[0]
+	region = request.form.getlist('region')[0].rstrip()
+
+	if len(request.form.getlist("AlreadyConfigured")) == 0:
+		file=request.files['file']
+		filename = secure_filename(file.filename)
+		file.save(os.path.join(os.getcwd() ,directory,filename))
+
+		content = '''
+			provider "google" {{
+				project     = var.project
+				credentials = "{filename}"
+				region      = "{region}"
+				zone        = "{region}-a"
+			}}
+
+			provider "google-beta" {{
+				project     = var.project
+				credentials = "{filename}"
+				region      = "{region}"
+				zone        = "{region}-a"
+			}}
+		'''
+		print(content.format(filename=filename,region=region))
+		os.chdir(directory)
+		provider_file = open("providers.tf", "w")
+		provider_file.write(content.format(project=project,filename=filename,region=region))
+		provider_file.close()
+		os.chdir("..")
+
+		data = json.load(open(os.path.join(os.getcwd() ,directory,filename)))
+		print(data['client_email'])
+
+		os.system('gcloud auth activate-service-account '+ data['client_email'] + ' --key-file='+os.path.join(os.getcwd() ,directory,filename))
+	else:
+		content = '''
+			provider "google" {}
+
+			provider "google-beta" {}
+		'''
+		os.chdir(directory)
+		provider_file = open("providers.tf", "w")
+		provider_file.write(content)
+		provider_file.close()
+		os.chdir("..")
+	
+	command = 'gcloud compute images list --format="json"'
+	if len(project) > 0:
+		command = 'gcloud compute images list --project="'+project+'" --format="json"'
+	
+	vms = sp.getoutput(command)
 
 	try:
 		vms = eval(vms)
@@ -344,7 +386,7 @@ def gcp_location():
 			txt = image['selfLink']
 			finalData.append(txt[txt.index("projects/") + 9:txt.index("/", txt.index("projects/") + 9 )] + txt[txt.rfind("/"):len(txt)])
 
-	return render_template("gcp.html",title="gcp",error=error,selectedProject=project,opt=finalData,ansibleList = getAnsibleList(),regions=regions)
+	return render_template("gcp.html",title="gcp",selectedRegion=region,error=error,selectedProject=project,opt=finalData,ansibleList = getAnsibleList(),regions=regions)
 
 
 @app.route("/gcp",methods=["POST"])
@@ -359,7 +401,6 @@ def gcp_post():
 	try:
 		list_softwares.pop('project')
 		list_softwares.pop('ami')
-		list_softwares.pop('AlreadyConfigured')
 	except:
 		print('a')
 
@@ -368,45 +409,9 @@ def gcp_post():
 
 	terraform_command_variables_and_value={}
 	terraform_command_variables_and_value["boot_image"] = boot_image
+	terraform_command_variables_and_value["project"] = project
 	terraform_command_variables_and_value['ansible_command'] = generateAnsibleCommand(list_softwares) 
 
-	if len(request.form.getlist("AlreadyConfigured")) == 0:
-		file=request.files['file']
-		filename = secure_filename(file.filename)
-		file.save(os.path.join(os.getcwd() ,directory,filename))
-		content = '''
-			provider "google" {{
-				project     = "{project}"
-				credentials = "{filename}"
-				region      = "asia-south1"
-				zone        = "asia-south1-a"
-			}}
-
-			provider "google-beta" {{
-				project     = "{project}"
-				credentials = "{filename}"
-				region      = "asia-south1"
-				zone        = "asia-south1-a"
-			}}
-		'''
-		print(content.format(project=project,filename=filename))
-		os.chdir(directory)
-		provider_file = open("providers.tf", "w")
-		provider_file.write(content.format(project=project,filename=filename))
-		provider_file.close()
-		os.chdir("..")
-	else:
-		content = '''
-			provider "google" {}
-
-			provider "google-beta" {}
-		'''
-		os.chdir(directory)
-		provider_file = open("providers.tf", "w")
-		provider_file.write(content)
-		provider_file.close()
-		os.chdir("..")
-	
 	applyCommand=generateApplyCommand(terraform_command_variables_and_value)
 	destroyCommand= generateApplyCommand(terraform_command_variables_and_value,"destroy")
 	remove_image_from_state_file_command = 'terraform state rm "google_compute_machine_image.image"'

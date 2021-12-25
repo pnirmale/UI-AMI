@@ -57,29 +57,45 @@
                         </button>
                     </div>
                 {% endif %}
-                <form method="POST" action="/gcp_location">
-                    <div class="form-group">
-                        <label for="projectToSearch">Enter Project to search marketplace images(if you leave blank then we will find only standard images)</label>
-                        {% if selectedProject %}
-                            <input type="text" style="width: 30%;" class="form-control" id="projectToSearch" name="projectToSearch" value='{{ selectedProject }}' placeholder="Specify Project Name">
-                        {% else %}
-                            <input type="text" style="width: 30%;" class="form-control" id="projectToSearch" name="projectToSearch"  placeholder="Specify PRoject Name">
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
-                    </div>
-                </form>
-                <form action="/gcp" method="POST" enctype="multipart/form-data">
+                <form method="POST" action="/gcp_location" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="os">Select Region</label> <br/>
                         <select class="selectpicker" data-live-search="true" id="region" name="region">
-                            <option SELECTED data-tokens='0'>Choose One</option> 
+                            {% if selectedRegion %}
+                                <option SELECTED data-tokens='{{ selectedRegion}}'>{{ selectedRegion }}</option> 
+                            {%else %}  
+                                <option SELECTED data-tokens='0'>Choose One</option> 
+                            {% endif %}
+
                             {% for x in regions %}
                                 <option data-tokens='{{ x }}' value='{{ x }}'>{{x}}</option>
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="projectToSearch">Enter Project to search marketplace images(if you leave blank then we will find only standard images)</label>
+                        {% if selectedProject %}
+                            <input type="text" style="width: 30%;" class="form-control" id="projectToSearch" name="projectToSearch" value='{{ selectedProject }}' placeholder="Specify Project Name">
+                        {% else %}
+                            <input type="text" style="width: 30%;" class="form-control" id="projectToSearch" name="projectToSearch"  placeholder="Specify Project Name">
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Choose gcp service Creadiantial file</label>
+                        <input type="file" class="form-control-file" id="file" name="file">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Check if you have configured already (No need to select configuration file if you have configured locally)
+                        </label>
+                    </div> <br/>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
+                    </div>
+                </form>
+            
+                <form action="/gcp" method="POST" >
                     <div class="form-group">
                         <label for="projectname">Project Id which has compute engine and billing enabled</label>
                         <input required type="text" style="width: 30%;" class="form-control" id="project" name="project" placeholder="Enter Project Name">
@@ -97,16 +113,7 @@
                         <h6>Choose Operating System from above to get list of available softwares </h6> 
                     </div>
                     
-                    <div class="form-group">
-                        <label for="file">Choose gcp service Creadiantial file</label>
-                        <input type="file" class="form-control-file" id="file" name="file">
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                          Check if you have configured already (No need to select configuration file if you have configured locally)
-                        </label>
-                    </div> <br/>
+                    
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>

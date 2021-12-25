@@ -40,3 +40,7 @@ variable boot_image {
 variable ansible_command {
     description = "Command to pass variables to ansible playbook"   
 }
+
+variable project { 
+    description = "Project Id which has compute engine and billing enabled"
+}
