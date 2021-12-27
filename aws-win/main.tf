@@ -4,7 +4,7 @@ module "vpc" {
   name = "my-vpc"
   cidr = var.vpc_cidr_block
 
-  azs             = [var.avail_zone]
+  azs             = [data.aws_availability_zones.available.names[0]]
   public_subnets  = [var.subnet_cidr_block]
 
   public_subnet_tags = {
@@ -53,7 +53,7 @@ resource "aws_instance" "web" {
   key_name = aws_key_pair.deployer.key_name
 
   subnet_id = module.vpc.public_subnets[0]
-  availability_zone = var.avail_zone
+  availability_zone = data.aws_availability_zones.available.names[0]
   vpc_security_group_ids = [aws_security_group.myapp-sg.id]
   associate_public_ip_address = true
 

@@ -38,11 +38,6 @@ variable subnet_cidr_block {
     default = "10.0.10.0/24"
 }
 
-variable avail_zone {
-    description = "Specify availability zone"
-    default = "us-east-2a"
-}
-
 variable "region" {
     description = " Specify region"
     default = "us-east-2"
