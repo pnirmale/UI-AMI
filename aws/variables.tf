@@ -25,7 +25,7 @@ variable subnet_cidr_block {
 
 variable avail_zone {
     description = "Specify availability zone"
-    default = "us-east-2a"
+    default = "us-east-1a"
 }
 
 variable "region" {
