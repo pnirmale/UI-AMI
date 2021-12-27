@@ -12,7 +12,7 @@ app = Flask(__name__)
 MIME_TYPE = 'text/javascript'
 
 awsDefaultUsers = {
-	'centos' : 'ec2-user',
+	'centos' : 'centos',
 	'debian' : 'admin',
 	'fedora' : 'fedora',
 	'rhel' : 'ec2-user',
