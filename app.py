@@ -208,7 +208,7 @@ def location():
 
 		os.remove(filename)
 
-	images = sp.getoutput('aws ec2 describe-images --region '+ region +' --filters "Name=name,Values='+ vmname +'"')
+	images = sp.getoutput('aws ec2 describe-images --region '+ region +' --filters Name=virtualization-type,Values=hvm Name=name,Values='+ vmname )
 
 	try:
 		images  = json.loads(images)
