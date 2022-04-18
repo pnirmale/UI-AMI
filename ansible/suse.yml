@@ -1,0 +1,13 @@
+- name: Install Python3
+  zypper:
+    name: python3
+    state: present
+  become: True
+  when: Python3 is defined
+
+- name: Install Git
+  zypper:
+    name: git
+    state: present
+  become: True
+  when: Git is defined

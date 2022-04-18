@@ -1,13 +1,235 @@
 [
     {
-        "os_name" : "ubuntu-16",
-        "ami_id" : "ami-074cce78125f09d61",
+        "os_name" :"Ubuntu Server 20.04 LTS (HVM)",
+        "ami_id" :"ami-0629230e074c580f2",
+        "user" :"ubuntu",
+        "region" :"us-east-2"
+    },
+    {
+        "os_name" : "Ubuntu Server 18.04 LTS (HVM)",
+        "ami_id" : "ami-020db2c14939a8efb ",
+        "user" : "ubuntu",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Ubuntu Server 16.04 LTS (HVM)",
+        "ami_id" : "ami-05803413c51f242b7",
+        "user" : "ubuntu",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Ubuntu-16.04 LTS HVM",
+        "ami_id" : "ami-05803413c51f242b7",
+        "user" : "ubuntu",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Ubuntu-18.04 LTS HVM",
+        "ami_id" : "ami-020db2c14939a8efb",
+        "user" : "ubuntu",
+        "region" : "us-east-2"
+
+    },
+    {
+        "os_name" : "Ubuntu-20.04 LTS",
+        "ami_id" : "ami-0629230e074c580f2",
+        "user" : "ubuntu",
+        "region" : "us-east-2"
+
+    },
+    {
+        "os_name" : "windows-19",
+        "ami_id" : "ami-019a4607ba39bfde6",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "windows-16",
+        "ami_id" : "ami-0661ac0cc12c17131",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "windows-12",
+        "ami_id" : "ami-052ef4bef4133272e",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Windows_Server-2019-English-Full-Base",
+        "ami_id" : "ami-08c213ebdf7b857c2",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Windows_Server-2019-English-Full-SQL_2019",
+        "ami_id" : "ami-0f63035a51f006e24",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Windows_Server-2022-English-Full-Base",
+        "ami_id" : "ami-099e512eecfc990b7",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Windows_Server-2016-English-Full-Base",
+        "ami_id" : "ami-0e4f22bcdb62d60f8",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Windows_Server-2016-English-Full-SQL_2016",
+        "ami_id" : "ami-073130d785f33f359",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "Windows_Server-2012-R2_RTM-English-64Bit",
+        "ami_id" : "ami-05a67d445b05c1e48",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.3.0",
+        "ami_id" : "ami-036b2035d68751234",
         "user" : "ec2-user",
         "region" : "us-east-2"
     },
     {
-        "os_name" : "windows-11",
-        "ami_id" : "random_string_windows",
+        "os_name" : "RHEL-8.2.0",
+        "ami_id" : "ami-015d9f9ba68b67486",
+        "user" : "ec2-user",
         "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.1.0",
+        "ami_id" : "ami-02b8373e524fcbb13",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-8.0.0",
+        "ami_id" : " ami-0099847d600887c9f",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.9",
+        "ami_id" : "ami-04d7524f0f99dcb18",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.8",
+        "ami_id" : "ami-0514e35fdff0030d9",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.7",
+        "ami_id" : "ami-0170fc126935d44c3",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.6",
+        "ami_id" : "ami-006b2db4ca7e39d7d",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.5",
+        "ami_id" : "ami-0376bbf9be9eac670",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.3",
+        "ami_id" : "ami-0932686c",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-7.2",
+        "ami_id" : "ami-0a33696f",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-6.10",
+        "ami_id" : "ami-00d151061fdb20f59",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "RHEL-6.9",
+        "ami_id" : "ami-05ecb660",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-15-sp2",
+        "ami_id" : "ami-0f052119b3c7e61d1",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5",
+        "ami_id" : "ami-04aa88aebb9fefd83",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-15-sp1",
+        "ami_id" : "ami-001816027222f96ba",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-manager-4-0-server-byos",
+        "ami_id" : "ami-00329096b91bab367",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-manager-4-0-proxy-byos",
+        "ami_id" : "ami-003dd614f3b667524",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-11-sp4-byos",
+        "ami_id" : "ami-009b213a22a9afa4b",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5-byos",
+        "ami_id" : "ami-009c145a2ff490186",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-manager-3-2-proxy-byos",
+        "ami_id" : "ami-00a6ca2627295f6d5",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5-byos",
+        "ami_id" : "ami-009c145a2ff490186",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5-byos",
+        "ami_id" : "ami-009c145a2ff490186",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "suse-sles-12-sp5-byos",
+        "ami_id" : "ami-009c145a2ff490186",
+        "user" : "ec2-user",
+        "region" : "us-east-2"
+    },
+    {
+        "os_name" : "CentOS 8.2.2004 x86_64",
+        "ami_id" : "ami-000e7ce4dd68e7a11",
+        "user" : "ec2-user",
+        "region" : "us-east-2"  
     }
 ]

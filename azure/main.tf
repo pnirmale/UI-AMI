@@ -105,11 +105,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user} -i ${self.public_ip_address}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml"
-  }
-
-  provisioner "local-exec" {
-    command = "az login --service-principal -u ${var.client_id} --password ${var.client_secret} --tenant ${var.tenant_id}"  
+    command = format("%s %s","ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user} -i ${self.public_ip_address}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml",var.ansible_command)
   }
 
   provisioner "local-exec" {
@@ -121,9 +117,14 @@ resource "azurerm_linux_virtual_machine" "main" {
   } 
 }
 
+resource "azurerm_resource_group" "for_image_storage" {
+  name     = "${var.prefix}-image-resources"
+  location = var.location
+}
+
 resource "azurerm_image" "my-image" {
   name                      = "${var.prefix}-image"
   location                  = var.location
-  resource_group_name       = azurerm_resource_group.main.name
+  resource_group_name       = azurerm_resource_group.for_image_storage.name
   source_virtual_machine_id = azurerm_linux_virtual_machine.main.id
 }

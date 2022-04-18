@@ -1,0 +1,20 @@
+- name: Install Epel-release repo
+  yum:
+    name: epel-release
+    state: present
+  become: True
+  when: ansible_facts['distribution'] == "CentOS"
+
+- name : Install Python
+  yum:
+    name: python3
+    state: present
+  when : Python3 is defined
+  become: True
+
+- name: Install Git
+  yum:
+    name: git
+    state: latest
+  become: True
+  when: Git is defined

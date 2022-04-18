@@ -1,10 +1,14 @@
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = "my-vpc"
   cidr = var.vpc_cidr_block
 
-  azs             = [var.avail_zone]
+  azs             = [data.aws_availability_zones.available.names[0]]
   public_subnets  = [var.subnet_cidr_block]
 
   public_subnet_tags = {
@@ -58,7 +62,7 @@ resource "aws_instance" "web" {
   key_name = aws_key_pair.deployer.key_name
 
   subnet_id = module.vpc.public_subnets[0]
-  availability_zone = var.avail_zone
+  availability_zone = data.aws_availability_zones.available.names[0]
   vpc_security_group_ids = [aws_security_group.myapp-sg.id]
   associate_public_ip_address = true
 
@@ -78,10 +82,18 @@ resource "aws_instance" "web" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${self.public_ip}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml"
+    command = format("%s %s","ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${self.public_ip}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml",var.ansible_command)
   }
 
   tags = {
     Name = "${var.prefix}-Terraform"
   }
+}
+
+resource "aws_ami_from_instance" "ami" {
+  name               = "linux_ami"
+  source_instance_id = aws_instance.web.id
+  depends_on = [
+    aws_instance.web
+  ]
 }

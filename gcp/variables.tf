@@ -1,13 +1,3 @@
-variable project {
-    description = " Specify projectId which has active billing and compute api activated"
-    default = "prathameshterraform"
-}
-
-variable service_account_credentials_file_location  {
-    description = "Specify path to service account credentials file"
-    default ="auth.json"
-}
-
 variable region {
     description = " Specify region"
     default = "asia-south1"
@@ -30,7 +20,7 @@ variable private_key_location {
 
 variable user {
     description = "Specify user's name that will be used for creating VM's"
-    default = "narahari"
+    default = "automation"
 }
 
 variable prefix {
@@ -46,4 +36,11 @@ variable machine_type {
 variable boot_image {
     description = "Specify boot image to be used"
     default = "ubuntu-os-cloud/ubuntu-1804-lts"
+}
+variable ansible_command {
+    description = "Command to pass variables to ansible playbook"   
+}
+
+variable project { 
+    description = "Project Id which has compute engine and billing enabled"
 }

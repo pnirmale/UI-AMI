@@ -1,0 +1,39 @@
+- name: install python3
+  apt:
+    name: python3
+    state: present
+    update_cache: 'yes'
+  become: True
+  when: Python3 is defined
+
+- name: Install git
+  apt:
+    name: git
+    state: present
+    update_cache: 'yes'
+  become: True
+  when: Git is defined
+
+
+# - name: Install MongoDB On Ubuntu/Debian
+#   apt:
+#     name: mongodb
+#     state: present
+#     update_cache: 'yes'
+#   become: True
+#   ignore_errors: True
+  # when: MongoDB is defined
+
+# - name: install Notepad++
+#   command: sudo snap install notepad-plus-plus
+#   ignore_errors: True
+  # when: NotepadPlusPlus is defined
+
+# - name: install chrome
+#   shell: |
+#     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+#     sudo apt install -y ./google-chrome-stable_current_amd64.deb
+#   ignore_errors: True  
+#   # when: GoogleChrome is defined
+
+

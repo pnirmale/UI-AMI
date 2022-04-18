@@ -1,18 +1,58 @@
-{
- "CentOS" :[
+[
   {
-    "offer": "CentOS",
-    "publisher": "OpenLogic",
-    "sku": "6.9",
-    "urn": "OpenLogic:CentOS:6.9:6.9.20210812",
-    "version": "6.9.20210812"
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2016-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2016-Datacenter:14393.4283.2103051830",
+    "version": "14393.4283.2103051830"
   },
   {
-    "offer": "CentOS",
-    "publisher": "OpenLogic",
-    "sku": "6.10",
-    "urn": "OpenLogic:CentOS:6.10:6.10.20181012",
-    "version": "6.10.20181012"
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2019-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2012-R2-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2012-Datacenter",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2012-Datacenter:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sku": "2008-R2-SP1",
+    "urn": "MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:latests",
+    "version": "latest"
+
+  },
+  {
+    "offer": "UbuntuServer",
+    "publisher": "Canonical",
+    "sku": "16.04-LTS",
+    "urn": "Canonical:UbuntuServer:16.04-LTS:latest",
+    "version": "latest"
+
+  },
+  {
+    "offer": "UbuntuServer",
+    "publisher": "Canonical",
+    "sku": "18.04-LTS",
+    "urn": "Canonical:UbuntuServer:18.04-LTS:latest",
+    "version": "latest"
+
   },
   {
     "offer": "CentOS",
@@ -104,60 +144,10 @@
     "sku": "8_4",
     "urn": "OpenLogic:CentOS:8_4:8.4.2021071900",
     "version": "8.4.2021071900"
-  }
-],
- "SUSE":[
-    {
-        "offer": "SLES-SAP-BYOS",
-        "publisher": "SUSE",
-        "sku": "12-SP3",
-        "urn": "SUSE:SLES-SAP-BYOS:12-SP3:2021.03.05",
-        "version": "2021.03.05"
-      },
-      {
-        "offer": "SLES-SAP-BYOS",
-        "publisher": "SUSE",
-        "sku": "12-sp4",
-        "urn": "SUSE:SLES-SAP-BYOS:12-sp4:2021.03.05",
-        "version": "2021.03.05"
-      },
-      {
-        "offer": "SLES-SAP-BYOS",
-        "publisher": "SUSE",
-        "sku": "12-sp4-gen2",
-        "urn": "SUSE:SLES-SAP-BYOS:12-sp4-gen2:2021.02.18",
-        "version": "2021.02.18"
-      },
-      {
-        "offer": "SLES-SAP-BYOS",
-        "publisher": "SUSE",
-        "sku": "15",
-        "urn": "SUSE:SLES-SAP-BYOS:15:2021.03.05",
-        "version": "2021.03.05"
-      },
-      {
-        "offer": "SLES-SAP-BYOS",
-        "publisher": "SUSE",
-        "sku": "15-gen2",
-        "urn": "SUSE:SLES-SAP-BYOS:15-gen2:2021.03.05",
-        "version": "2021.03.05"
-      },
-      {
-        "offer": "SLES-SAP-BYOS",
-        "publisher": "SUSE",
-        "sku": "gen2-12-sp4",
-        "urn": "SUSE:SLES-SAP-BYOS:gen2-12-sp4:2020.12.14",
-        "version": "2020.12.14"
-      },
-      {
-        "offer": "SLES-SAP-BYOS",
-        "publisher": "SUSE",
-        "sku": "gen2-15",
-        "urn": "SUSE:SLES-SAP-BYOS:gen2-15:2021.01.12",
-        "version": "2021.01.12"
-      }
-],"RHEL":[
-    {
+  },
+  
+
+  {
     "offer": "RHEL",
     "publisher": "RedHat",
     "sku": "6.10",
@@ -186,23 +176,6 @@
     "urn": "RedHat:RHEL:7.4:7.4.2021051701",
     "version": "7.4.2021051701"
   },
-
-  {
-    "offer": "RHEL",
-    "publisher": "RedHat",
-    "sku": "7.5",
-    "urn": "RedHat:RHEL:7.5:7.5.2021072201",
-    "version": "7.5.2021072201"
-  },
-
-  {
-    "offer": "RHEL",
-    "publisher": "RedHat",
-    "sku": "7.6",
-    "urn": "RedHat:RHEL:7.6:7.6.2021051101",
-    "version": "7.6.2021051101"
-  },
-
   {
     "offer": "RHEL",
     "publisher": "RedHat",
@@ -223,13 +196,6 @@
     "sku": "7_9",
     "urn": "RedHat:RHEL:7_9:7.9.202110089",
     "version": "7.9.202110089"
-  },
-  {
-    "offer": "RHEL",
-    "publisher": "RedHat",
-    "sku": "8",
-    "urn": "RedHat:RHEL:8:8.0.20191023",
-    "version": "8.0.20191023"
   },
   {
     "offer": "RHEL",
@@ -259,9 +225,4 @@
     "urn": "RedHat:RHEL:8_4:8.4.2021091101",
     "version": "8.4.2021091101"
   }
-
 ]
-
-}  
-
-
