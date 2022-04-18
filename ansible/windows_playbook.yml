@@ -1,0 +1,29 @@
+- name: Terraform Ansible Integration
+  hosts: all
+  tasks:
+    - name: set PowerShell memory allowance to 2GB
+      win_shell: set-item wsman:localhost\Shell\MaxMemoryPerShellMB 2048
+
+    - name: Install chocolatey
+      win_chocolatey:
+        name:
+          - chocolatey
+          - chocolatey-core.extension
+        state: present
+
+    - name: Install Python3
+      win_command: choco install -y python3
+      when: Python3 is defined
+
+    - name: Installing Notepad++
+      win_chocolatey:
+        name: notepadplusplus
+        version: '7.5.4'
+      when: NotepadPlusPlus is defined
+
+    - name: Install Google Chrome
+      win_chocolatey:
+        name: googlechrome
+        state: present
+        ignore_checksums: yes
+      when: GoogleChrome is defined

@@ -27,71 +27,132 @@
                 
                 <title>AMI automation</title>
             </head>
-            <body>
-                <div class="container">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                        <a class="navbar-brand" href="#">AMI</a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav mr-auto">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="{{ url_for('aws') }}">aws <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ url_for('azure') }}">Azure</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ url_for('gcp') }}">GCP</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                    <div class="jumbotron">
-                        <form action="/gcp" method="POST" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label for="vmname">Virtual Machine Name</label>
-                                <input  type="text" class="form-control" id="vmname" name="vmname" placeholder="Enter Virtual Machine Name">
-                            </div>
-                            <div class="form-group">
-                                <label for="projectname">Project Id which has compute engine and billing enabled</label>
-                                <input required type="text" class="form-control" id="project" name="project" placeholder="Enter Project Name">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="os">Select Required AMI  </label>
-                                <select class="selectpicker" data-live-search="true" id="ami" name="ami">
-                                    
-                                    <option SELECTED data-tokens='0'>Choose available ami</option>
-                                    {% for x in opt %}
-                                        <option data-tokens='{{ x }}'>{{x}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Check if you have configured already (No need to select configuration file if you have configured locally)
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label for="file">Choose Google Cloud Creadiantial file</label>
-                                <input type="file" class="form-control-file" id="file" name="file">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                    </div>
+    <body>
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/">AMI</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item ">
+                            <a class="nav-link" href="{{ url_for('aws') }}">aws <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('azure') }}">Azure</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ url_for('gcp') }}">GCP</a>
+                        </li>
+                    </ul>
                 </div>
-                
-                <!-- Optional JavaScript -->
-                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-                
-                
-                <script>
-                $(document).ready(function(){
+            </nav>
+            <div class="jumbotron">
+                {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ error }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endif %}
+                <form method="POST" action="/gcp_location" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="os">Select Region</label> <br/>
+                        <select class="selectpicker" data-live-search="true" id="region" name="region">
+                            {% if selectedRegion %}
+                                <option SELECTED data-tokens='{{ selectedRegion}}'>{{ selectedRegion }}</option> 
+                            {%else %}  
+                                <option SELECTED data-tokens='0'>Choose One</option> 
+                            {% endif %}
+
+                            {% for x in regions %}
+                                <option data-tokens='{{ x }}' value='{{ x }}'>{{x}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectToSearch">Enter Project to search marketplace images(if you leave blank then we will find only standard images)</label>
+                        {% if selectedProject %}
+                            <input type="text" style="width: 30%;" class="form-control" id="projectToSearch" name="projectToSearch" value='{{ selectedProject }}' placeholder="Specify Project Name">
+                        {% else %}
+                            <input type="text" style="width: 30%;" class="form-control" id="projectToSearch" name="projectToSearch"  placeholder="Specify Project Name">
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Choose gcp service Creadiantial file</label>
+                        <input type="file" class="form-control-file" id="file" name="file">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Check if you have configured already (No need to select configuration file if you have configured locally)
+                        </label>
+                    </div> <br/>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
+                    </div>
+                </form>
+            
+                <form action="/gcp" method="POST" >
+                    <div class="form-group">
+                        <label for="projectname">Project Id which has compute engine and billing enabled</label>
+                        <input required type="text" style="width: 30%;" class="form-control" id="project" name="project" placeholder="Enter Project Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="os">Select Base Image</label> <br/>
+                        <select class="selectpicker" data-live-search="true" id="ami" name="ami">
+                            <option SELECTED data-tokens='0'>Choose One</option> 
+                            {% for x in opt %}
+                                <option data-tokens='{{ x }}' value='{{ x }}'>{{x}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="ansibleList" name="ansibleList" class="form-group" data-list='{{ ansibleList }}'style="margin-top: 2rem;margin-bottom: 2rem;" >
+                        <h6>Choose Operating System from above to get list of available softwares </h6> 
+                    </div>
+                    
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function(){
                 $("selectpicker").selectpicker();
-                })
-                </script>
-            </body>
-        </html>
+            })
+
+            const x = document.getElementById('ami')
+            const ansibleListDropdown = document.getElementById('ansibleList')
+            const { windows,unix } = JSON.parse(ansibleListDropdown.dataset.list.replace(/'/gi,'"') )
+
+            x.addEventListener('change',()=>{
+                content ="<h6>Choose softwares to install from following </h6>"
+                if(x.value.includes('windows')){
+                    windows.forEach(e=>content += `
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox"  name=${e} value=${e} id="${e}">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            ${e}
+                        </label>
+                    </div>`)
+                    console.log(content)
+                    ansibleListDropdown.innerHTML = content
+                }
+                else{
+                    console.log(unix)
+                    unix.forEach(e=>content += `
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name=${e} value=${e} id="${e}">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            ${e}
+                        </label>
+                    </div>`)
+                    console.log(content)
+                    ansibleListDropdown.innerHTML = content
+                }
+            })
+        </script>
+    </body>
+</html>

@@ -13,6 +13,11 @@ variable user {
     default = "automation"
 }
 
+variable password {
+    description = " Specify password"
+    default = "N@rahari12345!"
+}
+
 variable prefix {
     description = "The prefix which should be used for all resources"
     default = "automation"
@@ -33,24 +38,19 @@ variable "subnet_cidr_block" {
     default = "10.0.0.0/24"
 }
 
-variable "size" {
-    description = "Specify size of vm"
-    default = "Standard_F2"
-}
-
 variable "publisher" {
      description = "specify source image reference publisher" 
-     default = "Canonical" 
+     default = "MicrosoftWindowsServer" 
 }
 
 variable "offer" {  
     description = "specify source image reference offer"
-    default     = "UbuntuServer" 
+    default     = "WindowsServer" 
 }
 
 variable "sku" {  
     description = "specify source image reference sku" 
-    default       = "16.04-LTS" 
+    default       = "2019-Datacenter" 
 }
 
 variable "image_version" { 
@@ -58,6 +58,10 @@ variable "image_version" {
     default   = "latest" 
 }
 
+variable vm_size {
+    description = "Specify vm size"
+    default = "Standard_DS1_v2"
+}
 variable ansible_command {
     description = "Command to pass variables to ansible playbook"   
 }

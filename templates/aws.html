@@ -28,7 +28,7 @@
     <body>
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="#">AMI</a>
+                <a class="navbar-brand" href="/">AMI</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -47,71 +47,114 @@
                 </div>
             </nav>
             <div class="jumbotron">
-                <form action="/aws" method="POST" enctype="multipart/form-data">
-                    <!-- <div class="form-group">
-                        <label for="vmname">Virtual Machine Name</label>
-                        <input  type="text" class="form-control" id="vmname" name="vmname" placeholder="Enter Virtual Machine Name">
+                {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ error }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                {% endif %}
+                <form action='/location' method='POST' enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="user">User name for instance</label>
-                        <input type="text" class="form-control" id="user" name="user" placeholder="Username for given Instance">
-                    </div>
-                    <div class="form-group">
-                        <label for="Password">Password</label>
-                        <input type="Password" class="form-control" id="Password" name="Password" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="region">Instance region</label>
-                        <input  type="text" class="form-control" id="region" name="region" placeholder="region">
-                    </div>
-                    <div class="form-group">
-                        <label for="scidr">Subnet cidr block</label>
-                        <input  type="text" class="form-control" id="scidr"  name="scidr" placeholder="10.0.0.0/16" >
-                    </div>
-                    <div class="form-group">
-                        <label for="vcidr">vpc cidr block </label>
-                        <input  type="text" class="form-control" id="vcidr" name="vcidr" placeholder="10.0.10.0/24">
-                    </div> 
-                    <div class="form-group">
-                        <label for="os">Choose Operating System</label>
-                        <select class="custom-select mr-sm-2" id="os" name="os">
-                            <option selected>Choose Operating System</option>
-                            <option value="1">Window</option>
-                            <option value="2">ubuntu-Linux</option>
-                            <option value="3">Centos</option>
-                            <option value="4">Suse</option>
+                        <label for="os">Select Region </label>
+                        <select class="selectpicker" data-live-search="true" id="region" name="region">
+                            {% if selectedRegion %}
+                                <option SELECTED data-tokens='{{ selectedRegion}}'>{{ selectedRegion }}</option>
+                            {% else %}
+                                <option SELECTED data-tokens='0'>Choose Region</option>
+                            {% endif %}
+                            {% for x in regions %}
+                                <option data-tokens='{{ x }}' value='{{ x }}' >{{x}}</option>
+                            {% endfor %}
                         </select>
-                    </div>-->
+                    </div>
                     <div class="form-group">
-                        <label for="os">Select Required AMI  </label>
-                        <select class="selectpicker" data-live-search="true" id="ami" name="ami">
-                                    
-                                    <option SELECTED data-tokens='0'>Choose available ami</option>
-                                    {% for x in opt %}
-                                        <option data-tokens='{{ x }}'>{{x.os_name}}</option>
-                                    {% endfor %}
-                                </select>
+                        <label for="os">Enter VM Name(Partial Name is Supported) </label>
+                        {% if vmname %}
+                            <input type="text" style="width: 30%;" class="form-control" name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" value = '{{  vmname }}' />
+                        {% else %}
+                            <input type="text" class="form-control" style="width: 30%;"  name="vmname" id="vmname" placeholder="Enter Partial Virtual Machine Name" />
+                        {% endif %}
+                        
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Choose aws Creadiantial file</label>
+                        <input type="file" class="form-control-file" id="file" name="file">
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" name="AlreadyConfigured" type="checkbox" value="true" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                           Check if you have configured already (No need to select configuration file if you have configured locally)
                         </label>
-                    </div>
+                    </div> <br/>
                     <div class="form-group">
-                        <label for="file">Choose aws Creadiantial file</label>
-                        <input type="file" class="form-control-file" id="file" name="file">
+                        <button type="submit" class="btn btn-success" name="fetchvm" id="fetchvm">Find Related VM's</button>
                     </div>
+                </form>
+
+                <form action="/aws" method="POST" >
+                
+                    <div class="form-group">
+                        <label for="os">Select Required AMI  </label> <br/>
+                        <select class="selectpicker" data-live-search="true" id="ami" name="ami">
+                            <option SELECTED data-tokens='0'>Choose One</option>
+                            {% for x in opt %}
+                                <option data-tokens='{{ x }}' value='{{ x }}'>{{x.os_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- <label> Choose Softwares to install</label>
+                    <select class="form-select" id='ansibleList' data-list='{{ ansibleList }}' multiple="multiple" name="software-list">
+                        <option selected>Open this select menu</option>
+                    </select> -->
+                    <div id="ansibleList" name="ansibleList" class="form-group" data-list='{{ ansibleList }}' style="margin-top: 2rem;margin-bottom: 2rem;" >
+                        <h6>Choose Operating System from above to get list of available softwares </h6> 
+                    </div>
+                   
+                    <input type='hidden' name='alreadyConfigured' value="{{ alreadyConfigured }}" />
+                    <input type="hidden"  name="region" value="{{ selectedRegion }}"> 
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
-        </div>
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        </div> 
         <script>
-                $(document).ready(function(){
+            $(document).ready(function(){
                 $("selectpicker").selectpicker();
-                })
-                </script>
+            })
+
+            const x = document.getElementById('ami')
+            const ansibleListDropdown = document.getElementById('ansibleList')
+            const { windows,unix } = JSON.parse(ansibleListDropdown.dataset.list.replace(/'/gi,'"') )
+
+            x.addEventListener('change',()=>{
+                content ="<h6>Choose softwares to install from following </h6>"
+                console.log(x.value,typeof(x.value),x.value.replace(/'/g,'"'))
+                let k = JSON.parse(x.value.replace(/'/g,'"')).os_name
+                if(k.toLowerCase().includes('windows')){
+                    windows.forEach(e=>content += `
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox"  name=${e} value=${e} id="${e}">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            ${e}
+                        </label>
+                    </div>`)
+                    console.log(content)
+                    ansibleListDropdown.innerHTML = content
+                }
+                else{
+                    console.log(unix)
+                    unix.forEach(e=>content += `
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name=${e} value=${e} id="${e}">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            ${e}
+                        </label>
+                    </div>`)
+                    console.log(content)
+                    ansibleListDropdown.innerHTML = content
+                }
+            })
+        </script>
     </body>
 </html>

@@ -20,7 +20,6 @@ resource "google_compute_instance" "dev" {
   provider     = google-beta
   name         = "${var.prefix}-vm"
   machine_type = var.machine_type
-  zone         = var.zone
   tags         = ["webserver"]
 
   boot_disk {
@@ -53,7 +52,7 @@ resource "google_compute_instance" "dev" {
   }
 
    provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${google_compute_address.static.address}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml"
+    command = format("%s %s","ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ${var.user}   -i ${google_compute_address.static.address}, --private-key ${var.private_key_location} ../ansible/linux_playbook.yml",var.ansible_command)
   }
 
   depends_on = [ google_compute_firewall.webserverrule ]

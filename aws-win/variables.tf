@@ -8,9 +8,24 @@ variable private_key_location {
     default = "~/.ssh/id_rsa"
 }
 
+variable user {
+  description = "Specify default user"
+  default="automation"
+}
+
+variable password {
+  description = "Provide password for user"
+  default="N@rahari12345!"
+}
+
 variable prefix {
     description = "The prefix which should be used for all resources"
     default = "automation"
+}
+
+variable connection_type {
+    description = "This describes the connection type"
+    default = "winrm"
 }
 
 variable vpc_cidr_block {
@@ -29,13 +44,8 @@ variable "region" {
 }
 
 variable "ami_id" {
-    description = "Specify linux ami id"
-    default = "ami-074cce78125f09d61"
-}
-
-variable user {
-    description = "Specify default user associated with given ami_id"
-    default = "ec2-user"
+    description = "Provide windows ami id"
+    default = "ami-0428fc1ee1bde045a"
 }
 
 variable instance_type {
@@ -45,5 +55,4 @@ variable instance_type {
 
 variable ansible_command {
     description = "Command to execute ansible playbook"
-    
 }
